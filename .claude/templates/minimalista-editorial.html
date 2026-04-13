@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<!--
+  Template: minimalista-editorial
+  Quando usar: reunioes de diretoria com tom reflexivo, estrategia de longo prazo,
+                reunioes que viram documento de referencia, discursos institucionais.
+                Conteudo denso em reflexao, citacoes relevantes, poucas acoes numericas.
+  Identidade: tipografia editorial, serif para titulos, muito ar entre elementos,
+               monocromatico com indigo como unico acento,
+               drop cap na abertura, pull quotes, numeracao elegante.
+  Dados abaixo sao AMOSTRA. Agente deve substituir por conteudo real.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Revisao Estrategica 2026 - Direcionamento de Produto</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      color-scheme: light;
+      --bg: #fafaf9;
+      --surface: #ffffff;
+      --text: #1c1917;
+      --text-muted: #57534e;
+      --text-dim: #a8a29e;
+      --accent: #4f46e5;
+      --accent-dark: #312e81;
+      --accent-soft: #eef2ff;
+      --border: #e7e5e4;
+      --border-strong: #1c1917;
+      --decisao: #166534;
+      --finding: #854d0e;
+      --problema: #991b1b;
+      --info: #1e40af;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Charter", "Iowan Old Style", "Georgia", "Times New Roman", serif;
+      line-height: 1.65;
+      -webkit-text-size-adjust: 100%;
+      font-size: 17px;
+    }
+    .sans {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .page-width { max-width: 720px; margin: 0 auto; padding: 0 1.75rem; }
+    .header {
+      padding: 4.5rem 0 2rem;
+      border-bottom: 1px solid var(--border-strong);
+      margin-bottom: 3rem;
+    }
+    .header .kicker {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .header h1 {
+      font-size: 2.75rem;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      font-family: "Charter", "Iowan Old Style", "Georgia", serif;
+    }
+    .header .deck {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .header .byline {
+      margin-top: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+    .header .byline span { display: inline-block; margin-right: 1.25rem; }
+    .lead {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      color: var(--text);
+    }
+    .lead::first-letter {
+      float: left;
+      font-size: 4.25rem;
+      line-height: 0.85;
+      font-weight: 600;
+      padding-right: 0.55rem;
+      padding-top: 0.35rem;
+      color: var(--accent);
+      font-family: "Charter", "Iowan Old Style", "Georgia", serif;
+    }
+    .section {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .section:first-of-type { border-top: none; padding-top: 0; }
+    .section-num {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .section h2 {
+      font-family: "Charter", "Iowan Old Style", "Georgia", serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      margin-bottom: 1.5rem;
+    }
+    .section p { margin-bottom: 1.25rem; }
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin: 2rem 0;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .metrics-row .metric {
+      padding: 0 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .metrics-row .metric:last-child { border-right: none; }
+    .metrics-row .metric .label {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .metrics-row .metric .value {
+      font-family: "Charter", "Iowan Old Style", "Georgia", serif;
+      font-size: 2.1rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .metrics-row .metric .unit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 0.15rem;
+    }
+    @media (max-width: 640px) {
+      .header h1 { font-size: 2rem; }
+      .section h2 { font-size: 1.5rem; }
+      .metrics-row { grid-template-columns: 1fr 1fr; }
+      .metrics-row .metric { border-bottom: 1px solid var(--border); padding: 0.75rem 1rem; }
+      .metrics-row .metric:nth-child(3), .metrics-row .metric:nth-child(4) { border-bottom: none; }
+      .metrics-row .metric:nth-child(2) { border-right: none; }
+    }
+    .pullquote {
+      font-family: "Charter", "Iowan Old Style", "Georgia", serif;
+      font-size: 1.55rem;
+      line-height: 1.4;
+      font-style: italic;
+      color: var(--text);
+      padding: 1.5rem 0 1.5rem 1.75rem;
+      border-left: 3px solid var(--accent);
+      margin: 2rem 0;
+      max-width: 640px;
+    }
+    .pullquote .attrib {
+      display: block;
+      margin-top: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.82rem;
+      font-style: normal;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .participants-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 2rem;
+      margin: 1.5rem 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.92rem;
+    }
+    .participants-list .p {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.55rem 0;
+      border-bottom: 1px dotted var(--border);
+    }
+    .participants-list .p .name { font-weight: 600; }
+    .participants-list .p .role { color: var(--text-muted); }
+    @media (max-width: 640px) {
+      .participants-list { grid-template-columns: 1fr; }
+    }
+    .topics-list { margin: 1.5rem 0; }
+    .topics-list .topic {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: baseline;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .topics-list .topic:last-child { border-bottom: none; }
+    .topics-list .topic .num {
+      font-family: "Charter", serif;
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 400;
+      min-width: 2.25rem;
+    }
+    .topics-list .topic .title {
+      font-family: "Charter", serif;
+      font-weight: 400;
+      font-size: 1.05rem;
+    }
+    .topics-list .topic .subtitle {
+      grid-column: 2;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.25rem;
+    }
+    .topics-list .topic .share {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .tags-row {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+    .tags-row .group { margin-bottom: 0.6rem; }
+    .tags-row .group-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-right: 0.75rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0;
+      margin-right: 1.1rem;
+      font-size: 0.88rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--accent);
+    }
+    .timeline-editorial { margin: 1.5rem 0; }
+    .timeline-editorial .entry {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-editorial .entry:last-child { border-bottom: none; }
+    .timeline-editorial .time {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      padding-top: 0.2rem;
+    }
+    .timeline-editorial .entry .text {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+    .insight-block {
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      border-left: 2px solid var(--border-strong);
+    }
+    .insight-block.decisao { border-left-color: var(--decisao); }
+    .insight-block.finding { border-left-color: var(--finding); }
+    .insight-block.problema { border-left-color: var(--problema); }
+    .insight-block.acao { border-left-color: var(--info); }
+    .insight-block .kind {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .insight-block.decisao .kind { color: var(--decisao); }
+    .insight-block.finding .kind { color: var(--finding); }
+    .insight-block.problema .kind { color: var(--problema); }
+    .insight-block.acao .kind { color: var(--info); }
+    .insight-block .body {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+    .risk-list { margin: 1.5rem 0; }
+    .risk-list .r {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+    .risk-list .r:last-child { border-bottom: none; }
+    .risk-list .r .glyph {
+      width: 22px; height: 22px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+    .risk-list .r.high .glyph { background: var(--problema); color: #fff; }
+    .risk-list .r.med .glyph { background: var(--finding); color: #fff; }
+    .risk-list .r.low .glyph { background: var(--decisao); color: #fff; }
+    .risk-list .r .qual {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .actions-editorial { margin: 1.5rem 0; }
+    .actions-editorial .a {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+      font-size: 0.95rem;
+    }
+    .actions-editorial .a:last-child { border-bottom: none; }
+    .actions-editorial .a .owner {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .actions-editorial .a .when {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.85rem 0;
+      border: none;
+      border-bottom: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text);
+      font-family: "Charter", "Georgia", serif;
+      font-size: 1rem;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--text-dim); }
+    .transcript-editorial {
+      margin: 1rem 0;
+      padding-top: 0.5rem;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .transcript-editorial .line {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .transcript-editorial .time {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .transcript-editorial mark { background: var(--accent-soft); padding: 0 2px; }
+    .footer {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    @media print {
+      body { font-size: 11pt; }
+      .section { break-inside: avoid; }
+      .pullquote { break-inside: avoid; }
+      .search-input { display: none; }
+      .transcript-editorial { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-width">
+    <header class="header">
+      <div class="kicker">Revisao Estrategica &middot; Direcao de Produto</div>
+      <h1>O proximo capitulo:<br>direcionamento 2026</h1>
+      <p class="deck">Uma conversa de pouco mais de uma hora que comecou com numeros e terminou com perguntas. Reflexoes sobre foco, paciencia estrategica e os limites de crescer sem perder a alma.</p>
+      <div class="byline">
+        <span>12 de abril de 2026</span>
+        <span>1h 18min</span>
+        <span>9 participantes</span>
+      </div>
+    </header>
+
+    <div class="section">
+      <p class="lead">A reuniao foi convocada como uma revisao trimestral, mas a conversa rapidamente escapou do roteiro. Por volta dos quinze minutos, a pergunta que guiaria todo o resto surgiu sem aviso: nao seria hora de escolher menos, em vez de fazer mais? Os proximos quarenta minutos foram dedicados a esse questionamento, e nao se chegou a um acordo fechado sobre o que cortar. Chegou-se, sim, a um consenso raro sobre a necessidade de cortar.</p>
+
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="label">Decisoes</div>
+          <div class="value">2</div>
+          <div class="unit sans">estruturais</div>
+        </div>
+        <div class="metric">
+          <div class="label">Direcoes</div>
+          <div class="value">3</div>
+          <div class="unit sans">pilares</div>
+        </div>
+        <div class="metric">
+          <div class="label">Duvidas</div>
+          <div class="value">11</div>
+          <div class="unit sans">abertas</div>
+        </div>
+        <div class="metric">
+          <div class="label">Consenso</div>
+          <div class="value">91<span class="unit">%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 01</div>
+      <h2>Participantes</h2>
+      <div class="participants-list">
+        <div class="p"><span class="name">Helena Veiga</span><span class="role">CEO</span></div>
+        <div class="p"><span class="name">Rafael Dias</span><span class="role">CPO - facilitador</span></div>
+        <div class="p"><span class="name">Lara Campos</span><span class="role">VP Engenharia</span></div>
+        <div class="p"><span class="name">Bruno Sa</span><span class="role">VP Vendas</span></div>
+        <div class="p"><span class="name">Clara Menezes</span><span class="role">Head de Design</span></div>
+        <div class="p"><span class="name">Pedro Rocha</span><span class="role">Head de Dados</span></div>
+        <div class="p"><span class="name">Juliana Prado</span><span class="role">Head de Clientes</span></div>
+        <div class="p"><span class="name">Vinicius Teles</span><span class="role">Conselheiro</span></div>
+        <div class="p"><span class="name">Sophie Lang</span><span class="role">Financas</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 02</div>
+      <h2>Topicos discutidos</h2>
+      <div class="topics-list">
+        <div class="topic">
+          <div class="num">I</div>
+          <div class="title">Revisao do Q1: metas x realidade</div>
+          <div class="share">24%</div>
+          <div class="subtitle">83% da meta de ARR atingida; canal pago em revisao.</div>
+        </div>
+        <div class="topic">
+          <div class="num">II</div>
+          <div class="title">Foco estrategico: escolher menos frentes</div>
+          <div class="share">31%</div>
+          <div class="subtitle">Proposta de reduzir de 5 para 3 linhas de produto. Resistencia inicial.</div>
+        </div>
+        <div class="topic">
+          <div class="num">III</div>
+          <div class="title">Contratacoes em engenharia e dados</div>
+          <div class="share">18%</div>
+          <div class="subtitle">Lara defende mais senioridade que volume em 2026.</div>
+        </div>
+        <div class="topic">
+          <div class="num">IV</div>
+          <div class="title">Experiencia do cliente no onboarding</div>
+          <div class="share">16%</div>
+          <div class="subtitle">NPS caiu 6 pontos; Juliana detalha hipoteses.</div>
+        </div>
+        <div class="topic">
+          <div class="num">V</div>
+          <div class="title">Conselho de proxima rodada</div>
+          <div class="share">11%</div>
+          <div class="subtitle">Vinicius sugere esperar janela mais favoravel em H2.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 03</div>
+      <h2>Pontos centrais</h2>
+      <p>A conversa se organizou em torno de tres tensoes. A primeira, mais pragmatica, tratava do gap entre a meta de ARR e a execucao real. A segunda, mais filosofica, questionava se o portfolio atual era sustentavel. A terceira, mais humana, reconhecia que o time esta cansado e que novas frentes sem redistribuicao exigiriam contratacoes agressivas.</p>
+
+      <blockquote class="pullquote">
+        A gente esta optando por fazer tudo com metade da atencao que cada coisa merece. Isso nao e crescer; e se diluir.
+        <span class="attrib sans">&mdash; Helena Veiga, 27:08</span>
+      </blockquote>
+
+      <p>Rafael encaminhou a discussao para um exercicio concreto: listar as cinco frentes atuais e debater, uma por uma, qual seria o custo de abandonar. Duas delas sobreviveram com consenso imediato. Uma foi imediatamente descartada. As outras duas ficaram em aberto, e sera tema da proxima reuniao executiva, em 26/04.</p>
+
+      <blockquote class="pullquote">
+        Entrar em 2026 com cinco apostas e a forma mais cara de nao ganhar nenhuma delas. Prefiro tres com conviccao do que cinco por inercia.
+        <span class="attrib sans">&mdash; Vinicius Teles, conselheiro, 51:22</span>
+      </blockquote>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 04</div>
+      <h2>Entidades e referencias</h2>
+      <div class="tags-row">
+        <div class="group">
+          <span class="group-label">Produtos</span>
+          <span class="tag">produto-core</span>
+          <span class="tag">produto-B</span>
+          <span class="tag">produto-C</span>
+          <span class="tag">produto-D</span>
+          <span class="tag">produto-E</span>
+        </div>
+        <div class="group">
+          <span class="group-label">Mercados</span>
+          <span class="tag">Brasil</span>
+          <span class="tag">LatAm</span>
+          <span class="tag">Mexico</span>
+        </div>
+        <div class="group">
+          <span class="group-label">Conceitos</span>
+          <span class="tag">foco estrategico</span>
+          <span class="tag">paciencia estrategica</span>
+          <span class="tag">portfolio consolidado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 05</div>
+      <h2>Como a conversa evoluiu</h2>
+      <div class="timeline-editorial">
+        <div class="entry">
+          <div class="time">00:00 &mdash; 12:30</div>
+          <div class="text">Rafael apresenta os numeros de Q1. Tom executivo, analitico. Sophie complementa com projecao de runway.</div>
+        </div>
+        <div class="entry">
+          <div class="time">12:30 &mdash; 27:15</div>
+          <div class="text">Helena introduz a questao do foco. Primeiro silencio prolongado da reuniao. Tom muda para reflexivo.</div>
+        </div>
+        <div class="entry">
+          <div class="time">27:15 &mdash; 45:40</div>
+          <div class="text">Exercicio de triagem das cinco frentes. Debate aberto, com posicoes divergentes entre Bruno e Lara.</div>
+        </div>
+        <div class="entry">
+          <div class="time">45:40 &mdash; 1:02:10</div>
+          <div class="text">Vinicius intervem com perspectiva de conselho. Sugere postergar proxima rodada para H2.</div>
+        </div>
+        <div class="entry">
+          <div class="time">1:02:10 &mdash; 1:18:00</div>
+          <div class="text">Consolidacao de duas decisoes. Agenda da proxima reuniao marcada. Juliana oferece trazer dados de NPS detalhados.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 06</div>
+      <h2>Insights e decisoes</h2>
+      <div class="insight-block decisao">
+        <div class="kind">Decisao</div>
+        <div class="body">Descontinuar o produto-E no proximo trimestre. Cliente-base sera migrado com suporte dedicado.</div>
+      </div>
+      <div class="insight-block decisao">
+        <div class="kind">Decisao</div>
+        <div class="body">Manter produto-core, produto-B e produto-C como pilares estrategicos de 2026.</div>
+      </div>
+      <div class="insight-block finding">
+        <div class="kind">Finding</div>
+        <div class="body">NPS caiu de 62 para 56 no ultimo trimestre. Padrao concentrado em novos usuarios, sugerindo problema no onboarding.</div>
+      </div>
+      <div class="insight-block problema">
+        <div class="kind">Problema</div>
+        <div class="body">Destino dos produtos D e E nao foi totalmente resolvido. Decisao adiada para reuniao de 26/04.</div>
+      </div>
+      <div class="insight-block acao">
+        <div class="kind">Acao</div>
+        <div class="body">Juliana traz analise completa de NPS segmentado por coorte ate 19/04.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 07</div>
+      <h2>Riscos no horizonte</h2>
+      <div class="risk-list">
+        <div class="r high">
+          <div class="glyph">A</div>
+          <div>Migracao do produto-E pode gerar churn significativo se mal comunicada.</div>
+          <div class="qual">Alto</div>
+        </div>
+        <div class="r high">
+          <div class="glyph">A</div>
+          <div>Postergar proxima rodada pode apertar runway caso o Q3 seja fraco.</div>
+          <div class="qual">Alto</div>
+        </div>
+        <div class="r med">
+          <div class="glyph">M</div>
+          <div>Reducao de frentes pode causar saida voluntaria de lideres ligados aos produtos descontinuados.</div>
+          <div class="qual">Medio</div>
+        </div>
+        <div class="r med">
+          <div class="glyph">M</div>
+          <div>Contratacoes seniores competitivas com o mercado - custo 30-40% acima do planejado.</div>
+          <div class="qual">Medio</div>
+        </div>
+        <div class="r low">
+          <div class="glyph">B</div>
+          <div>Impacto reputacional de descontinuar produto no mercado B2B.</div>
+          <div class="qual">Baixo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 08</div>
+      <h2>Proximos passos</h2>
+      <div class="actions-editorial">
+        <div class="a">
+          <div>Analise segmentada de NPS por coorte e hipoteses de queda</div>
+          <div class="owner">Juliana</div>
+          <div class="when">19/04</div>
+        </div>
+        <div class="a">
+          <div>Plano de comunicacao de descontinuidade do produto-E</div>
+          <div class="owner">Clara + Juliana</div>
+          <div class="when">22/04</div>
+        </div>
+        <div class="a">
+          <div>Deliberacao final sobre produtos D e E na proxima reuniao</div>
+          <div class="owner">Helena</div>
+          <div class="when">26/04</div>
+        </div>
+        <div class="a">
+          <div>Revisao de plano de contratacoes priorizando senioridade</div>
+          <div class="owner">Lara</div>
+          <div class="when">30/04</div>
+        </div>
+        <div class="a">
+          <div>Modelo de runway com 3 cenarios para H2</div>
+          <div class="owner">Sophie</div>
+          <div class="when">05/05</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">Secao 09</div>
+      <h2>Transcricao</h2>
+      <input type="text" class="search-input" id="searchInput" placeholder="buscar um trecho da conversa...">
+      <div class="transcript-editorial" id="transcript">
+        <div class="line"><span class="time">00:14</span>Rafael: bom dia a todos. Hoje a ideia e revisar Q1 e abrir espaco para discussao estrategica.</div>
+        <div class="line"><span class="time">12:38</span>Helena: antes da gente fechar o Q1, queria levantar uma coisa. A gente esta correndo atras de cinco coisas ao mesmo tempo.</div>
+        <div class="line"><span class="time">27:08</span>Helena: a gente esta optando por fazer tudo com metade da atencao que cada coisa merece. Isso nao e crescer; e se diluir.</div>
+        <div class="line"><span class="time">45:50</span>Bruno: meu receio e perder conta enterprise que depende do produto-D.</div>
+        <div class="line"><span class="time">51:22</span>Vinicius: entrar em 2026 com cinco apostas e a forma mais cara de nao ganhar nenhuma delas.</div>
+        <div class="line"><span class="time">1:02:40</span>Helena: entao fechamos: produto-E descontinuado. D e E ficam pra dia 26.</div>
+      </div>
+    </div>
+
+    <div class="footer">Gerado via /analisar-reuniao &middot; template minimalista-editorial</div>
+  </div>
+  <script>
+    (function(){
+      var input = document.getElementById('searchInput');
+      var transcript = document.getElementById('transcript');
+      if (!input || !transcript) return;
+      var lines = Array.from(transcript.querySelectorAll('.line'));
+      var raw = lines.map(function(l){ return { el: l, text: l.textContent.toLowerCase() }; });
+      input.addEventListener('input', function(){
+        var q = input.value.toLowerCase().trim();
+        raw.forEach(function(r){
+          r.el.style.display = (!q || r.text.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

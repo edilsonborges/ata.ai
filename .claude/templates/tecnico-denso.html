@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<!--
+  Template: tecnico-denso
+  Quando usar: reunioes de arquitetura, code review, discussao tecnica profunda, incidentes.
+                Foco em fluxos, findings, problemas, dependencias e decisoes tecnicas.
+  Identidade: indigo + slate chrome, mono para timestamps e identificadores,
+               densidade alta, sparklines SVG, fluxo diagramatico.
+  Dados abaixo sao AMOSTRA. Agente deve substituir por conteudo real.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Refatoracao API Pedidos - Review Arquitetural</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      color-scheme: light;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --primary: #4f46e5;
+      --primary-dark: #312e81;
+      --primary-light: #eef2ff;
+      --slate: #334155;
+      --slate-dark: #1e293b;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --decisao: #16a34a;
+      --finding: #d97706;
+      --problema: #dc2626;
+      --info: #2563eb;
+      --construtivo: #7c3aed;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+      --radius: 6px;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      font-size: 14px;
+      -webkit-text-size-adjust: 100%;
+    }
+    .mono, code, .time, .path, .hash, pre {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .header {
+      background: linear-gradient(135deg, var(--slate-dark), var(--slate), var(--primary));
+      color: #fff;
+      padding: 2rem 1.5rem 1.5rem;
+      border-bottom: 3px solid var(--primary);
+    }
+    .header .inner { max-width: 1200px; margin: 0 auto; }
+    .header .kicker {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .header h1 { font-size: 1.6rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.35rem; }
+    .header .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.82rem;
+    }
+    .header .meta-line .item { display: flex; align-items: center; gap: 0.35rem; }
+    .header .meta-line .dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: 0.6; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1.25rem; }
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+    }
+    .kpi.ok { border-left-color: var(--decisao); }
+    .kpi.warn { border-left-color: var(--finding); }
+    .kpi.err { border-left-color: var(--problema); }
+    .kpi .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 0.2rem; }
+    .kpi .value { font-size: 1.4rem; font-weight: 700; color: var(--text); font-family: "JetBrains Mono", ui-monospace, monospace; }
+    .kpi .sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+    h2.section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: var(--slate);
+      margin: 1.5rem 0 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--slate-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h2.section-title::before {
+      content: "//";
+      color: var(--primary);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-weight: 700;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.75rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    @media (max-width: 720px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    .sentiment-bar {
+      display: flex;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    .sentiment-bar .seg.pos { background: var(--decisao); }
+    .sentiment-bar .seg.neu { background: var(--finding); }
+    .sentiment-bar .seg.neg { background: var(--problema); }
+    .sparkline { width: 100%; height: 40px; display: block; }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border-light);
+      font-size: 0.88rem;
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row .n { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 600; }
+    .people-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .people-table th, .people-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border-light); }
+    .people-table th { background: var(--surface-alt); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); }
+    .role-badge {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--slate-dark);
+      color: #fff;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .role-badge.pm { background: var(--info); }
+    .role-badge.dev { background: var(--decisao); }
+    .role-badge.ops { background: var(--finding); }
+    .topic-row {
+      display: grid;
+      grid-template-columns: 20px 1fr 80px 60px;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border-light);
+      font-size: 0.88rem;
+    }
+    .topic-row:last-child { border-bottom: none; }
+    .topic-row .idx { font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--text-dim); font-size: 0.78rem; }
+    .topic-row .bar { height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+    .topic-row .bar > span { display: block; height: 100%; background: var(--primary); }
+    .topic-row .pct { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; color: var(--text-muted); text-align: right; }
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 3px;
+      font-size: 0.72rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      margin: 0.1rem;
+      background: var(--surface-alt);
+      color: var(--slate-dark);
+      border: 1px solid var(--border-light);
+    }
+    .tag-sistema { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+    .tag-orgao { background: #fae8ff; color: #86198f; border-color: #f5d0fe; }
+    .tag-tech { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+    .tag-ferramenta { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .tag-pessoa { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0;
+      align-items: stretch;
+    }
+    .flow .node {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 0.75rem;
+      text-align: center;
+      font-size: 0.82rem;
+      position: relative;
+      margin-right: 1rem;
+    }
+    .flow .node:last-child { margin-right: 0; }
+    .flow .node::after {
+      content: "→";
+      position: absolute;
+      right: -0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .flow .node:last-child::after { content: none; }
+    .flow .node .step { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.68rem; color: var(--text-dim); margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .flow .node .title { font-weight: 600; }
+    .flow .node .actor { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .timeline-cols {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 0;
+    }
+    .timeline-cols .time-col {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      padding: 0.4rem 0;
+      border-right: 2px solid var(--border);
+      text-align: right;
+      padding-right: 0.75rem;
+    }
+    .timeline-cols .text-col {
+      padding: 0.4rem 0 0.4rem 0.75rem;
+      font-size: 0.88rem;
+      position: relative;
+    }
+    .timeline-cols .text-col::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      top: 0.75rem;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .timeline-cols .text-col.positive::before { background: var(--decisao); }
+    .timeline-cols .text-col.concern::before { background: var(--problema); }
+    .timeline-cols .text-col.constructive::before { background: var(--construtivo); }
+    .insight-card {
+      border-left: 3px solid var(--primary);
+      background: var(--primary-light);
+      padding: 0.75rem 0.9rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 0.5rem;
+      font-size: 0.88rem;
+    }
+    .insight-card.decisao { border-left-color: var(--decisao); background: #f0fdf4; }
+    .insight-card.finding { border-left-color: var(--finding); background: #fffbeb; }
+    .insight-card.problema { border-left-color: var(--problema); background: #fef2f2; }
+    .insight-card.acao { border-left-color: var(--info); background: #eff6ff; }
+    .insight-card .kind {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      background: var(--slate-dark);
+      color: #fff;
+      margin-right: 0.5rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .insight-card.decisao .kind { background: var(--decisao); }
+    .insight-card.finding .kind { background: var(--finding); }
+    .insight-card.problema .kind { background: var(--problema); }
+    .insight-card.acao .kind { background: var(--info); }
+    .risk-bubble {
+      position: relative;
+      height: 280px;
+      background: linear-gradient(to top right, #f0fdf4 0%, #fffbeb 50%, #fef2f2 100%);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .risk-bubble .axis-x, .risk-bubble .axis-y {
+      position: absolute;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .risk-bubble .axis-x { bottom: 4px; }
+    .risk-bubble .axis-y { left: 4px; writing-mode: vertical-rl; transform: rotate(180deg); }
+    .risk-bubble .bubble {
+      position: absolute;
+      padding: 0.25rem 0.55rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      transform: translate(-50%, 50%);
+    }
+    .risk-bubble .bubble.high { background: var(--problema); color: #fff; border-color: var(--problema); }
+    .risk-bubble .bubble.med { background: var(--finding); color: #fff; border-color: var(--finding); }
+    .risk-bubble .bubble.low { background: var(--decisao); color: #fff; border-color: var(--decisao); }
+    .actions-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .actions-table th, .actions-table td { text-align: left; padding: 0.6rem 0.6rem; border-bottom: 1px solid var(--border-light); }
+    .actions-table th { background: var(--surface-alt); font-size: 0.7rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.06em; }
+    .prio {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      letter-spacing: 0.04em;
+    }
+    .prio-p0 { background: var(--problema); color: #fff; }
+    .prio-p1 { background: var(--finding); color: #fff; }
+    .prio-p2 { background: var(--slate); color: #fff; }
+    .search-input {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      background: var(--surface);
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .transcript {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius);
+      max-height: 480px;
+      overflow-y: auto;
+      line-height: 1.8;
+    }
+    .transcript .line { padding: 0.15rem 0; }
+    .transcript .time { color: #64748b; margin-right: 0.6rem; }
+    .transcript mark { background: #eab308; color: #0f172a; padding: 0 2px; }
+    .footer {
+      text-align: center;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      padding: 1.5rem 0 1rem;
+    }
+    @media print {
+      .transcript { background: var(--surface-alt); color: var(--text); max-height: none; overflow: visible; }
+      .search-input { display: none; }
+      .card, section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="inner">
+      <div class="kicker">REUNIAO / TECNICA / ARQUITETURA</div>
+      <h1>Refatoracao API Pedidos - Review Arquitetural</h1>
+      <div class="meta-line">
+        <div class="item"><span class="dot"></span>07/04/2026 14:00</div>
+        <div class="item"><span class="dot"></span>1h 22min</div>
+        <div class="item"><span class="dot"></span>5 participantes</div>
+        <div class="item"><span class="dot"></span>Consenso 74%</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="kpi-strip">
+      <div class="kpi ok"><div class="label">Decisoes</div><div class="value">3</div><div class="sub">arquiteturais</div></div>
+      <div class="kpi warn"><div class="label">Findings</div><div class="value">7</div><div class="sub">tecnicos</div></div>
+      <div class="kpi err"><div class="label">Problemas</div><div class="value">4</div><div class="sub">2 criticos</div></div>
+      <div class="kpi"><div class="label">Acoes</div><div class="value">12</div><div class="sub">P0: 3 | P1: 6 | P2: 3</div></div>
+      <div class="kpi"><div class="label">Duvidas abertas</div><div class="value">5</div><div class="sub">aguardam spike</div></div>
+    </div>
+
+    <h2 class="section-title">Sentimento & Engajamento</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.3rem;">DISTRIBUICAO DO TOM</div>
+        <div class="sentiment-bar">
+          <div class="seg pos" style="width: 58%"></div>
+          <div class="seg neu" style="width: 27%"></div>
+          <div class="seg neg" style="width: 15%"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted);">
+          <span>Construtivo 58%</span><span>Neutro 27%</span><span>Atrito 15%</span>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-dim);">ENGAJAMENTO AO LONGO DO TEMPO</div>
+        <svg class="sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#4f46e5" stroke-width="2" points="0,28 20,22 40,18 60,25 80,10 100,14 120,8 140,12 160,20 180,15 200,22"/>
+          <polyline fill="#4f46e5" fill-opacity="0.12" stroke="none" points="0,40 0,28 20,22 40,18 60,25 80,10 100,14 120,8 140,12 160,20 180,15 200,22 200,40"/>
+        </svg>
+      </div>
+      <div class="card">
+        <div class="stat-row"><span>Propostas avaliadas</span><span class="n">6</span></div>
+        <div class="stat-row"><span>Spike requests gerados</span><span class="n">3</span></div>
+        <div class="stat-row"><span>Tradeoffs explicitados</span><span class="n">11</span></div>
+        <div class="stat-row"><span>Referencias externas citadas</span><span class="n">8</span></div>
+        <div class="stat-row"><span>Conflito de opiniao (resolvido)</span><span class="n">2</span></div>
+        <div class="stat-row"><span>Termo mais usado</span><span class="n">idempotencia</span></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Participantes</h2>
+    <div class="card">
+      <table class="people-table">
+        <thead>
+          <tr><th>Nome</th><th>Papel</th><th>Contribuicao</th><th>% fala</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lucas Almeida</td><td><span class="role-badge dev">TECH LEAD</span></td><td>Proposta principal de refatoracao</td><td class="mono">32%</td></tr>
+          <tr><td>Priscila Souza</td><td><span class="role-badge dev">SR DEV</span></td><td>Challenger - apontou 4 findings</td><td class="mono">24%</td></tr>
+          <tr><td>Rafael Pinto</td><td><span class="role-badge ops">SRE</span></td><td>Impacto em observabilidade</td><td class="mono">18%</td></tr>
+          <tr><td>Bianca Silva</td><td><span class="role-badge pm">PM</span></td><td>Impacto em roadmap</td><td class="mono">16%</td></tr>
+          <tr><td>Carol Mendes</td><td><span class="role-badge dev">DEV</span></td><td>Contexto legado</td><td class="mono">10%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Topicos Discutidos</h2>
+    <div class="card">
+      <div class="topic-row"><span class="idx">01</span><span>Separacao do dominio de pagamentos como bounded context</span><div class="bar"><span style="width: 92%"></span></div><span class="pct">28.4%</span></div>
+      <div class="topic-row"><span class="idx">02</span><span>Estrategia de dual-write durante transicao</span><div class="bar"><span style="width: 74%"></span></div><span class="pct">22.8%</span></div>
+      <div class="topic-row"><span class="idx">03</span><span>Idempotencia em endpoints de criacao</span><div class="bar"><span style="width: 61%"></span></div><span class="pct">18.9%</span></div>
+      <div class="topic-row"><span class="idx">04</span><span>Observabilidade: metricas e tracing distribuido</span><div class="bar"><span style="width: 48%"></span></div><span class="pct">14.7%</span></div>
+      <div class="topic-row"><span class="idx">05</span><span>Migracao incremental vs big bang</span><div class="bar"><span style="width: 35%"></span></div><span class="pct">10.8%</span></div>
+      <div class="topic-row"><span class="idx">06</span><span>Contrato com consumers downstream</span><div class="bar"><span style="width: 14%"></span></div><span class="pct">4.4%</span></div>
+    </div>
+
+    <h2 class="section-title">Entidades & Referencias</h2>
+    <div class="card">
+      <div style="margin-bottom: 0.75rem;">
+        <div style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.3rem;">Sistemas</div>
+        <span class="tag tag-sistema">orders-api</span>
+        <span class="tag tag-sistema">payments-svc</span>
+        <span class="tag tag-sistema">inventory-svc</span>
+        <span class="tag tag-sistema">legacy-monolith</span>
+      </div>
+      <div style="margin-bottom: 0.75rem;">
+        <div style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.3rem;">Tecnologias</div>
+        <span class="tag tag-tech">PostgreSQL 15</span>
+        <span class="tag tag-tech">Kafka</span>
+        <span class="tag tag-tech">gRPC</span>
+        <span class="tag tag-tech">OpenTelemetry</span>
+        <span class="tag tag-tech">Saga pattern</span>
+      </div>
+      <div style="margin-bottom: 0.75rem;">
+        <div style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.3rem;">Ferramentas</div>
+        <span class="tag tag-ferramenta">Linear</span>
+        <span class="tag tag-ferramenta">Grafana</span>
+        <span class="tag tag-ferramenta">Datadog APM</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Fluxo Proposto</h2>
+    <div class="card">
+      <div class="flow">
+        <div class="node">
+          <div class="step">01</div>
+          <div class="title">Extrair dominio</div>
+          <div class="actor">@lucas</div>
+        </div>
+        <div class="node">
+          <div class="step">02</div>
+          <div class="title">Dual-write 30d</div>
+          <div class="actor">@priscila</div>
+        </div>
+        <div class="node">
+          <div class="step">03</div>
+          <div class="title">Shadow traffic</div>
+          <div class="actor">@rafael</div>
+        </div>
+        <div class="node">
+          <div class="step">04</div>
+          <div class="title">Cutover</div>
+          <div class="actor">@lucas</div>
+        </div>
+        <div class="node">
+          <div class="step">05</div>
+          <div class="title">Deprecar legado</div>
+          <div class="actor">@carol</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Timeline</h2>
+    <div class="card">
+      <div class="timeline-cols">
+        <div class="time-col">00:00-08:30</div>
+        <div class="text-col positive">Contexto e motivacao. Lucas apresenta problema de acoplamento orders <-> payments.</div>
+        <div class="time-col">08:30-24:12</div>
+        <div class="text-col constructive">Proposta de bounded context. Priscila apoia com 3 referencias (Evans, Vernon, Fowler).</div>
+        <div class="time-col">24:12-38:40</div>
+        <div class="text-col concern">Atrito: Rafael questiona viabilidade de observabilidade durante dual-write.</div>
+        <div class="time-col">38:40-51:20</div>
+        <div class="text-col constructive">Spike proposto para validar overhead de double-tracing. Owner: @rafael.</div>
+        <div class="time-col">51:20-1:05:00</div>
+        <div class="text-col positive">Consenso em migracao incremental. Big bang descartado por risco operacional.</div>
+        <div class="time-col">1:05:00-1:22:00</div>
+        <div class="text-col constructive">Proximo passo: RFC formal ate 18/04. Review em 21/04.</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Insights e Decisoes</h2>
+    <div class="grid-2">
+      <div class="insight-card decisao"><span class="kind">DECISAO</span>Extrair payments como servico independente com bounded context proprio.</div>
+      <div class="insight-card decisao"><span class="kind">DECISAO</span>Migracao incremental com dual-write por 30 dias.</div>
+      <div class="insight-card decisao"><span class="kind">DECISAO</span>Big bang rejeitado - risco operacional inaceitavel.</div>
+      <div class="insight-card finding"><span class="kind">FINDING</span>Legado tem 47 endpoints nao documentados - inventario antes do corte.</div>
+      <div class="insight-card finding"><span class="kind">FINDING</span>Payments tem 3 callers internos escondidos em jobs noturnos.</div>
+      <div class="insight-card problema"><span class="kind">PROBLEMA</span>Dual-write dobra carga no Postgres - capacity review obrigatorio.</div>
+      <div class="insight-card problema"><span class="kind">PROBLEMA</span>Observabilidade durante shadow traffic pode distorcer SLIs.</div>
+      <div class="insight-card acao"><span class="kind">ACAO</span>Lucas escreve RFC ate 18/04 com decisoes consolidadas.</div>
+    </div>
+
+    <h2 class="section-title">Matriz de Risco</h2>
+    <div class="card">
+      <div class="risk-bubble">
+        <div class="axis-y">Probabilidade</div>
+        <div class="axis-x">Impacto</div>
+        <div class="bubble high" style="left: 75%; top: 30%;">DB overload</div>
+        <div class="bubble high" style="left: 60%; top: 50%;">Dual-write bug</div>
+        <div class="bubble med" style="left: 45%; top: 60%;">Obs distortion</div>
+        <div class="bubble med" style="left: 30%; top: 45%;">Callers esquecidos</div>
+        <div class="bubble low" style="left: 20%; top: 75%;">Doc legado</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Acoes</h2>
+    <div class="card">
+      <table class="actions-table">
+        <thead><tr><th>Tarefa</th><th>Owner</th><th>Prazo</th><th>Prio</th></tr></thead>
+        <tbody>
+          <tr><td>RFC formal da refatoracao</td><td>@lucas</td><td class="mono">18/04</td><td><span class="prio prio-p0">P0</span></td></tr>
+          <tr><td>Capacity review Postgres</td><td>@rafael</td><td class="mono">14/04</td><td><span class="prio prio-p0">P0</span></td></tr>
+          <tr><td>Inventario de callers internos</td><td>@carol</td><td class="mono">16/04</td><td><span class="prio prio-p0">P0</span></td></tr>
+          <tr><td>Spike: overhead de double-tracing</td><td>@rafael</td><td class="mono">21/04</td><td><span class="prio prio-p1">P1</span></td></tr>
+          <tr><td>Catalogo de 47 endpoints legados</td><td>@carol</td><td class="mono">25/04</td><td><span class="prio prio-p1">P1</span></td></tr>
+          <tr><td>Setup de shadow environment</td><td>@priscila</td><td class="mono">30/04</td><td><span class="prio prio-p1">P1</span></td></tr>
+          <tr><td>Atualizar contratos com downstream</td><td>@bianca</td><td class="mono">05/05</td><td><span class="prio prio-p2">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Transcricao</h2>
+    <div class="card">
+      <input type="text" class="search-input" id="searchInput" placeholder="&gt; grep transcricao...">
+      <div class="transcript" id="transcript">
+        <div class="line"><span class="time">[00:12]</span>Lucas: o problema central e que orders e payments compartilham o mesmo schema. Qualquer mudanca em um afeta o outro.</div>
+        <div class="line"><span class="time">[08:45]</span>Priscila: concordo com a proposta de bounded context. Vernon aborda exatamente esse cenario.</div>
+        <div class="line"><span class="time">[24:15]</span>Rafael: meu receio e observabilidade durante dual-write. Os spans vao duplicar e distorcer SLIs.</div>
+        <div class="line"><span class="time">[38:40]</span>Rafael: posso fazer um spike isolado de 3 dias para medir o overhead.</div>
+        <div class="line"><span class="time">[51:22]</span>Lucas: big bang esta fora. Nao temos apetite para risco operacional nesse nivel.</div>
+        <div class="line"><span class="time">[1:05:10]</span>Lucas: fecho RFC ate 18/04. Review formal dia 21.</div>
+      </div>
+    </div>
+
+    <div class="footer">// gerado via /analisar-reuniao - template tecnico-denso</div>
+  </main>
+  <script>
+    (function(){
+      var input = document.getElementById('searchInput');
+      var transcript = document.getElementById('transcript');
+      if (!input || !transcript) return;
+      var lines = Array.from(transcript.querySelectorAll('.line'));
+      var raw = lines.map(function(l){ return { el: l, text: l.textContent.toLowerCase() }; });
+      input.addEventListener('input', function(){
+        var q = input.value.toLowerCase().trim();
+        raw.forEach(function(r){
+          r.el.style.display = (!q || r.text.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

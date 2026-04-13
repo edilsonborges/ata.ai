@@ -240,17 +240,41 @@ Criar dentro da pasta com esta estrutura:
 
 ## Fase 6: Gerar `dashboard.html`
 
-Criar um dashboard visual **self-contained** (CSS inline, JS inline, apenas Chart.js via CDN). O design segue o padrao descrito abaixo rigorosamente.
+Criar um dashboard visual **100% self-contained e sem JavaScript** (CSS inline, **nenhum grafico dependente de JS**). Motivo: iOS Quick Look, Preview no Files e AirDrop preview DESATIVAM JavaScript em HTMLs locais. Mesmo com Chart.js inline, o JS nao executa nesses contextos e o usuario ve cards vazios. Portanto todas as visualizacoes devem ser HTML + CSS puros — sem `<canvas>`, sem Chart.js, sem dependencia de `<script>` para mostrar dados. JavaScript pode existir apenas como **progressive enhancement** (ex: busca na transcricao) — se nao executar, o dashboard continua legivel. O design segue o padrao descrito abaixo rigorosamente.
+
+### 6.0 Escolha do template base (obrigatorio)
+
+Antes de gerar o `dashboard.html`, escolher um template base em `.claude/templates/`. O agente NAO deve gerar o dashboard do zero — deve usar um dos modelos existentes como ponto de partida visual e adaptar o conteudo. Catalogo completo e regras em `.claude/templates/README.md`.
+
+**Regra de decisao** (avaliar no conteudo analisado na Fase 4):
+
+| Sinais dominantes | Template |
+| --- | --- |
+| Decisoes executivas, acoes priorizadas, poucos participantes seniores, foco em entrega/resultado | `executivo-clean.html` |
+| Arquitetura, codigo, sistemas, findings tecnicos, fluxos de processo, incidentes, RFCs | `tecnico-denso.html` |
+| Retrospectiva explicita, sentimento/humor em primeiro plano, mesmo time, start/stop/continue, 1-on-1 em grupo | `retrospectiva-warm.html` |
+| Tom reflexivo, estrategia de longo prazo, citacoes longas relevantes, pouca acao numerica, board/conselho | `minimalista-editorial.html` |
+
+Em caso de empate, usar `executivo-clean.html` como default.
+
+**Como adaptar o template escolhido**:
+
+1. Abrir o HTML do template e usa-lo como base visual: preservar paleta, tipografia, estilo de card, densidade, estrutura de secoes.
+2. Substituir **100% dos dados de amostra** pelos dados reais extraidos na Fase 4. Nenhum texto do sample (nomes fake, "Sprint 12", "Refatoracao API", etc) pode sobrar no output.
+3. **Omitir secoes sem dado real** (ex: se nao houve riscos, nao deixar "Matriz de Risco" com cards vazios).
+4. Ajustar textos longos (resumo, pull quotes) ao tom do template escolhido — o `minimalista-editorial` espera paragrafos reflexivos; o `tecnico-denso` espera bullets curtos e diretos.
+5. Manter todas as restricoes tecnicas listadas em 6.1 (zero JS para dados, light mode forcado, CSS-only charts, sem CDN, sem emojis).
+6. Se o template tem JS opcional de busca na transcricao, pode manter (progressive enhancement) — a pagina deve continuar legivel sem ele.
 
 ### 6.1 Requisitos tecnicos
 
 - `<html lang="pt-BR">`, charset UTF-8, viewport responsivo
-- Chart.js via CDN: `https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js`
+- **Zero dependencia de JavaScript para mostrar dados** (OBRIGATORIO). iOS Quick Look, iOS Files Preview e AirDrop preview DESATIVAM JavaScript em HTMLs locais. Nao usar Chart.js (nem via CDN, nem inline). Todas as visualizacoes devem ser **HTML + CSS puros**: barras com `width: N%`, donuts com `conic-gradient`, bubbles com `position: absolute` e `background: radial-gradient`, sparklines com `<svg>` inline estatico. JavaScript so pode existir como **progressive enhancement** (ex: busca na transcricao) — a pagina inteira deve ser legivel com JS desativado.
 - Fontes: system stack (sem Google Fonts)
 - **Modo light forcado** (OBRIGATORIO para legibilidade em mobile): incluir `<meta name="color-scheme" content="light">` no `<head>` E `color-scheme: light` no `:root` do CSS. Sem isso, iOS Safari e Chrome Android com dark mode do sistema invertem cores automaticamente e o texto vira branco sobre fundo claro (ilegivel).
 - Grid responsivo com breakpoint mobile em 600px
 - Print-friendly via `@media print`
-- Tudo inline no arquivo — deve abrir no navegador sem dependencias locais
+- Tudo inline no arquivo — deve abrir no navegador, no iOS Files, via AirDrop ou Quick Look **sem nenhuma dependencia externa e sem depender de JS**
 
 ### 6.2 Estrutura HTML (ordem das secoes)
 
@@ -690,199 +714,233 @@ Classes de sentimento do item: `positive`, `neutral`, `concern`, `constructive`.
 </div>
 ```
 
-### 6.6 Graficos Chart.js
+### 6.6 Graficos em HTML/CSS puro (sem JavaScript)
 
-Antes do `</body>`, incluir:
+**NAO use Chart.js nem qualquer lib de graficos que dependa de JS.** Use os templates CSS abaixo para todas as visualizacoes. Adicione estes estilos ao bloco CSS principal (secao 6.3) na primeira vez que precisar:
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script>
-const P = {
-  accent: '#4f46e5', green: '#10b981', red: '#ef4444', amber: '#f59e0b',
-  blue: '#3b82f6', purple: '#8b5cf6', indigo: '#6366f1', teal: '#14b8a6',
-  rose: '#f43f5e', slate: '#64748b', cyan: '#06b6d4', lime: '#84cc16',
-  accentLight: 'rgba(79,70,229,.15)', greenLight: 'rgba(16,185,129,.15)',
-  redLight: 'rgba(239,68,68,.15)', amberLight: 'rgba(245,158,11,.15)',
-  blueLight: 'rgba(59,130,246,.15)', purpleLight: 'rgba(139,92,246,.15)'
-};
+```css
+/* ---- Graficos CSS puros ---- */
 
-// === GRAFICOS ===
+/* Barra horizontal (speakers, topicos) */
+.hbar { display: flex; flex-direction: column; gap: .7rem; }
+.hbar-row { display: flex; align-items: center; gap: .75rem; font-size: .85rem; }
+.hbar-label { flex: 0 0 130px; color: var(--text); font-weight: 500; }
+.hbar-track { flex: 1; height: 22px; background: #f3f4f6; border-radius: 6px; overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: .5rem; color: #fff; font-size: .72rem; font-weight: 700; }
 
-// 1. Sentiment Donut
-new Chart(document.getElementById('sentimentDonut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Colaborativo', 'Tecnico', 'Construtivo', 'Preocupacao', 'Entusiasmo'],
-    datasets: [{
-      data: [{a},{b},{c},{d},{e}],
-      backgroundColor: [P.green, P.blue, P.purple, P.amber, P.cyan],
-      borderWidth: 0
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    cutout: '60%',
-    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
-  }
-});
+/* Donut via conic-gradient (sem JS) */
+.donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.donut {
+  width: 180px; height: 180px; border-radius: 50%;
+  position: relative;
+  /* a propriedade background e gerada inline com conic-gradient */
+}
+.donut::before {
+  content: ''; position: absolute;
+  inset: 30px; background: var(--card);
+  border-radius: 50%;
+}
+.donut-legend { display: flex; flex-wrap: wrap; gap: .4rem .75rem; font-size: .78rem; justify-content: center; }
+.donut-legend span { display: flex; align-items: center; gap: .35rem; color: var(--text); }
+.donut-legend span::before { content: ''; width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
 
-// 2. Emotion Radar
-new Chart(document.getElementById('emotionRadar'), {
-  type: 'radar',
-  data: {
-    labels: ['Colaboracao', 'Curiosidade', 'Resolucao', 'Entusiasmo', 'Preocupacao', 'Pragmatismo'],
-    datasets: [{
-      data: [{v1},{v2},{v3},{v4},{v5},{v6}],
-      backgroundColor: P.accentLight,
-      borderColor: P.accent,
-      borderWidth: 2,
-      pointBackgroundColor: P.accent
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: { r: { beginAtZero: true, max: 100, ticks: { display: false } } },
-    plugins: { legend: { display: false } }
-  }
-});
+/* Barra vertical por fases (engajamento) */
+.vbars { display: flex; align-items: flex-end; justify-content: space-around; gap: .4rem; height: 200px; padding: .5rem 0 1.5rem; border-bottom: 1px solid var(--border); position: relative; }
+.vbar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .25rem; position: relative; }
+.vbar-stack { width: 100%; max-width: 28px; display: flex; flex-direction: column-reverse; }
+.vbar-seg { width: 100%; min-height: 2px; }
+.vbar-seg:first-child { border-radius: 0 0 4px 4px; }
+.vbar-seg:last-child { border-radius: 4px 4px 0 0; }
+.vbar-label { font-size: .66rem; color: var(--text-muted); text-align: center; position: absolute; bottom: -1.25rem; white-space: nowrap; transform: rotate(-30deg); transform-origin: center; }
 
-// 3. Sentiment Line (temporal)
-new Chart(document.getElementById('sentimentLine'), {
-  type: 'line',
-  data: {
-    labels: ['0%','10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
-    datasets: [
-      {
-        label: 'Sentimento',
-        data: [/* 11 pontos */],
-        borderColor: P.accent, backgroundColor: P.accentLight,
-        tension: 0.4, fill: true
-      },
-      {
-        label: 'Engajamento',
-        data: [/* 11 pontos */],
-        borderColor: P.amber, backgroundColor: P.amberLight,
-        tension: 0.4, fill: true
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: { y: { beginAtZero: true, max: 100 } }
-  }
-});
+/* Matriz de risco (probabilidade x impacto) */
+.risk-matrix { position: relative; width: 100%; aspect-ratio: 1; max-width: 480px; margin: 0 auto; background: linear-gradient(135deg, #d1fae5 0%, #fef3c7 50%, #fee2e2 100%); border: 1px solid var(--border); border-radius: 8px; }
+.risk-matrix::before, .risk-matrix::after { content: ''; position: absolute; background: rgba(0,0,0,.06); }
+.risk-matrix::before { left: 0; right: 0; top: 50%; height: 1px; }
+.risk-matrix::after  { top: 0; bottom: 0; left: 50%; width: 1px; }
+.risk-axis-x, .risk-axis-y { position: absolute; font-size: .7rem; color: var(--text-muted); font-weight: 600; }
+.risk-axis-x { bottom: -1.5rem; left: 50%; transform: translateX(-50%); }
+.risk-axis-y { top: 50%; left: -2.5rem; transform: translateY(-50%) rotate(-90deg); transform-origin: center; }
+.risk-dot {
+  position: absolute; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .7rem; font-weight: 700;
+  transform: translate(-50%, 50%);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
 
-// 4. Speaker Bar (horizontal)
-new Chart(document.getElementById('speakerBar'), {
-  type: 'bar',
-  data: {
-    labels: [/* nomes */],
-    datasets: [{
-      label: 'Tempo de fala (%)',
-      data: [/* percentuais */],
-      backgroundColor: [P.purple, P.blue, P.green, P.amber, P.rose],
-      borderRadius: 6
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    indexAxis: 'y',
-    scales: { x: { beginAtZero: true, max: 100 } },
-    plugins: { legend: { display: false } }
-  }
-});
+/* Radar simplificado: lista vertical de metricas com mini-barras */
+.radar-list { display: flex; flex-direction: column; gap: .6rem; }
+.radar-row { display: flex; align-items: center; gap: .5rem; font-size: .82rem; }
+.radar-row .lbl { flex: 0 0 100px; color: var(--text); font-weight: 500; }
+.radar-row .track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+.radar-row .fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--accent)); border-radius: 4px; }
+.radar-row .val { flex: 0 0 38px; text-align: right; color: var(--text-muted); font-size: .78rem; font-weight: 600; }
 
-// 5. Topic Bar (horizontal)
-new Chart(document.getElementById('topicBar'), {
-  type: 'bar',
-  data: {
-    labels: [/* topicos */],
-    datasets: [{
-      data: [/* relevancias 0-100 */],
-      backgroundColor: [P.accent, P.purple, P.green, P.blue, P.amber, P.rose, P.teal, P.cyan],
-      borderRadius: 6
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    indexAxis: 'y',
-    scales: { x: { beginAtZero: true, max: 100 } },
-    plugins: { legend: { display: false } }
-  }
-});
-
-// 6. Risk Bubble (probabilidade x impacto x tamanho)
-new Chart(document.getElementById('riskBubble'), {
-  type: 'bubble',
-  data: {
-    datasets: [
-      { label: '{risco 1}', data: [{x: 6, y: 5, r: 14}], backgroundColor: P.amber },
-      { label: '{risco 2}', data: [{x: 7, y: 4, r: 12}], backgroundColor: P.red },
-      { label: '{risco 3}', data: [{x: 3, y: 6, r: 10}], backgroundColor: P.blue }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: {
-      x: { title: { display: true, text: 'Probabilidade' }, min: 0, max: 10 },
-      y: { title: { display: true, text: 'Impacto' }, min: 0, max: 10 }
-    },
-    plugins: { legend: { position: 'bottom' } }
-  }
-});
-
-// 7. Engagement Bar (opcional, stacked por fases)
-new Chart(document.getElementById('engagementBar'), {
-  type: 'bar',
-  data: {
-    labels: [/* fases */],
-    datasets: [
-      { label: 'Participacao', data: [/**/], backgroundColor: P.blue },
-      { label: 'Tensao/Debate', data: [/**/], backgroundColor: P.rose }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: { x: { ticks: { maxRotation: 45, minRotation: 0 } }, y: { beginAtZero: true } }
-  }
-});
-</script>
+/* Sparkline temporal (svg estatico inline) */
+.sparkline { width: 100%; max-width: 520px; height: 120px; display: block; margin: 0 auto; }
+.sparkline path.area-accent { fill: rgba(79,70,229,.15); stroke: var(--accent); stroke-width: 2; }
+.sparkline path.area-amber  { fill: rgba(245,158,11,.15); stroke: var(--amber);  stroke-width: 2; }
+.sparkline-legend { display: flex; gap: 1rem; justify-content: center; font-size: .75rem; color: var(--text-muted); margin-top: .5rem; }
+.sparkline-legend span { display: flex; align-items: center; gap: .35rem; }
+.sparkline-legend span::before { content: ''; width: 12px; height: 3px; border-radius: 2px; }
 ```
 
-### 6.7 Script de transcricao com busca
+**Templates HTML** (substituir valores conforme os dados reais da reuniao):
 
 ```html
-<script>
-// Transcricao formatada como string JS com [MM:SS] antes de cada fala
-// Gerar a partir dos segmentos do Whisper (/tmp/reuniao_segments.json)
-var transcript = `[00:00] Primeira fala...
+<!-- 1. Donut de sentimento (conic-gradient inline) -->
+<div class="card">
+  <h3>Sentimento Geral</h3>
+  <div class="donut-wrap">
+    <div class="donut" style="background: conic-gradient(
+      var(--green)  0%  35%,
+      var(--blue)   35% 60%,
+      var(--purple) 60% 80%,
+      var(--amber)  80% 92%,
+      var(--cyan)   92% 100%)"></div>
+    <div class="donut-legend">
+      <span><i style="background:var(--green)"></i> Colaborativo 35%</span>
+      <span><i style="background:var(--blue)"></i> Tecnico 25%</span>
+      <span><i style="background:var(--purple)"></i> Construtivo 20%</span>
+      <span><i style="background:var(--amber)"></i> Preocupacao 12%</span>
+      <span><i style="background:var(--cyan)"></i> Pragmatico 8%</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Radar simplificado (lista vertical com barras) -->
+<div class="card">
+  <h3>Emocoes Detectadas</h3>
+  <div class="radar-list">
+    <div class="radar-row"><span class="lbl">Colaboracao</span><div class="track"><div class="fill" style="width:85%"></div></div><span class="val">85</span></div>
+    <div class="radar-row"><span class="lbl">Curiosidade</span><div class="track"><div class="fill" style="width:60%"></div></div><span class="val">60</span></div>
+    <div class="radar-row"><span class="lbl">Resolucao</span><div class="track"><div class="fill" style="width:70%"></div></div><span class="val">70</span></div>
+    <div class="radar-row"><span class="lbl">Entusiasmo</span><div class="track"><div class="fill" style="width:40%"></div></div><span class="val">40</span></div>
+    <div class="radar-row"><span class="lbl">Preocupacao</span><div class="track"><div class="fill" style="width:55%"></div></div><span class="val">55</span></div>
+    <div class="radar-row"><span class="lbl">Pragmatismo</span><div class="track"><div class="fill" style="width:90%"></div></div><span class="val">90</span></div>
+  </div>
+</div>
+
+<!-- 3. Sparkline temporal (SVG estatico inline — nao depende de JS) -->
+<div class="card">
+  <h3>Evolucao do Sentimento</h3>
+  <svg class="sparkline" viewBox="0 0 520 120" preserveAspectRatio="none">
+    <!-- Area sentimento: gerar o path "M x,y L x,y ... L x,y Z" a partir dos 11 pontos -->
+    <path class="area-accent" d="M0,48 L52,54 L104,60 L156,66 L208,42 L260,36 L312,30 L364,30 L416,36 L468,48 L520,18 L520,120 L0,120 Z"/>
+    <!-- Area engajamento -->
+    <path class="area-amber"  d="M0,36 L52,30 L104,24 L156,18 L208,12 L260,18 L312,24 L364,18 L416,30 L468,24 L520,36 L520,120 L0,120 Z"/>
+  </svg>
+  <div class="sparkline-legend">
+    <span style="color:var(--accent)"><i style="background:var(--accent)"></i> Sentimento</span>
+    <span style="color:var(--amber)"><i style="background:var(--amber)"></i> Engajamento</span>
+  </div>
+</div>
+
+<!-- 4. Barra horizontal (speakers, topicos) — reutilizavel -->
+<div class="card">
+  <h3>Distribuicao de Fala</h3>
+  <div class="hbar">
+    <div class="hbar-row">
+      <div class="hbar-label">Narrador</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:65%;background:var(--purple)">65%</div></div>
+    </div>
+    <div class="hbar-row">
+      <div class="hbar-label">Joao</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:25%;background:var(--blue)">25%</div></div>
+    </div>
+    <div class="hbar-row">
+      <div class="hbar-label">Outros</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:10%;background:var(--slate,#64748b)">10%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Barra vertical stacked (engajamento por fase) -->
+<div class="card">
+  <h3>Engajamento por Fase</h3>
+  <div class="vbars">
+    <div class="vbar">
+      <div class="vbar-stack" style="height:65%">
+        <div class="vbar-seg" style="height:50%;background:var(--blue)"></div>
+        <div class="vbar-seg" style="height:15%;background:var(--rose,#f43f5e)"></div>
+      </div>
+      <span class="vbar-label">Abertura</span>
+    </div>
+    <!-- ... repetir por fase, altura total em % relativo ao maximo ... -->
+  </div>
+</div>
+
+<!-- 6. Matriz de risco (dots posicionados em %) -->
+<div class="card">
+  <h3>Matriz de Risco (Probabilidade x Impacto)</h3>
+  <div class="risk-matrix">
+    <span class="risk-axis-x">Probabilidade &rarr;</span>
+    <span class="risk-axis-y">Impacto &rarr;</span>
+    <!-- Cada dot: left = probabilidade*10%, bottom = impacto*10% -->
+    <div class="risk-dot" style="width:56px;height:56px;background:var(--red);left:80%;bottom:90%" title="Migracao quebra grades">R1</div>
+    <div class="risk-dot" style="width:48px;height:48px;background:var(--amber);left:90%;bottom:70%" title="Oficina de matematica">R2</div>
+    <div class="risk-dot" style="width:44px;height:44px;background:var(--purple);left:70%;bottom:80%" title="Perda de conteudo">R3</div>
+  </div>
+</div>
+```
+
+**Regras de calculo dos valores**:
+- Donut: os percentuais DEVEM somar 100% (caso contrario o visual fica quebrado). Ajustar para totalizar exatamente 100%.
+- Barras horizontais: `width` em porcentagem direta do valor (0-100%).
+- Sparkline SVG: gerar os caminhos com Python, mapeando os pontos (0-100) para coordenadas SVG (viewBox 520x120, inverter Y). Cada path comeca no primeiro ponto, traca linhas para todos os demais, e fecha para baixo com `L 520,120 L 0,120 Z` para formar a area.
+- Matriz de risco: `left` = probabilidade * 10% e `bottom` = impacto * 10%. Tamanho do dot proporcional a importancia (raio entre 30 e 60px).
+
+### 6.7 Transcricao (e busca como progressive enhancement)
+
+A transcricao completa deve estar **renderizada diretamente no HTML** (dentro do `<div class="transcript-box">`), nao injetada via JS. Se JS estiver desativado (Quick Look no iOS), o usuario ainda consegue ler a transcricao inteira.
+
+```html
+<div class="card">
+  <h3>Transcricao Completa</h3>
+  <!-- Campo de busca: aparece somente quando JS esta ativo; esconder via <noscript> -->
+  <input type="text" class="search-input" id="searchInput" placeholder="Buscar na transcricao...">
+  <noscript><style>#searchInput { display: none; }</style></noscript>
+  <div class="transcript-box" id="transcriptBox">[00:00] Primeira fala...
 [00:15] Segunda fala...
-[00:32] Terceira fala...`;
+[00:32] Terceira fala...</div>
+</div>
+```
 
-var box = document.getElementById('transcriptBox');
-box.innerHTML = transcript.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+A busca fica como **progressive enhancement** (opcional — funciona quando JS roda, degrada silenciosamente quando nao roda):
 
-document.getElementById('searchInput').addEventListener('input', function() {
-  var term = this.value.trim();
-  if (!term) {
-    box.innerHTML = transcript.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return;
+```html
+<script>
+// Busca opcional. Se JS nao executar, a transcricao continua legivel.
+(function() {
+  var box = document.getElementById('transcriptBox');
+  var input = document.getElementById('searchInput');
+  if (!box || !input) return;
+  var original = box.textContent;
+  function render(term) {
+    var safe = original.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!term) { box.innerHTML = safe; return; }
+    var escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var regex = new RegExp('(' + escaped + ')', 'gi');
+    box.innerHTML = safe.replace(regex, '<span class="highlight">$1</span>');
   }
-  var escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  var regex = new RegExp('(' + escaped + ')', 'gi');
-  box.innerHTML = transcript
-    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(regex, '<span class="highlight">$1</span>');
-});
+  input.addEventListener('input', function() { render(this.value.trim()); });
+})();
 </script>
 ```
 
-**CUIDADO ao embutir a transcricao** como template string JS: escapar backticks (`` ` ``), `${` e `\` no texto. Se a transcricao contiver esses caracteres, use aspas simples concatenadas ou `JSON.stringify()` via Python ao gerar o HTML.
+**IMPORTANTE**:
+- A transcricao eh colocada **diretamente no HTML** (entre as tags `<div>`), nao em uma string JavaScript. Isso garante que ela aparece mesmo com JS desativado.
+- Os caracteres `<`, `>` e `&` da transcricao devem ser escapados como entidades HTML ao serem embutidos (use Python para fazer isso).
+- Preservar quebras de linha — a `.transcript-box` tem `white-space: pre-wrap`.
 
 ### 6.8 Regras para geracao do dashboard
 
-- Arquivo **totalmente autocontido** (CSS e JS inline, apenas Chart.js via CDN)
-- Abrir no navegador SEM dependencias locais
+- Arquivo **totalmente autocontido** — CSS inline, zero dependencias externas, zero uso de CDN
+- **JavaScript NUNCA e necessario para ver dados** (OBRIGATORIO). iOS Quick Look, iOS Files Preview e AirDrop preview desativam JS em HTMLs locais. Todos os graficos devem ser HTML + CSS puros (ver secao 6.6). JS so pode existir para enhancements opcionais (ex: filtro de busca na transcricao) e a pagina deve continuar legivel se o JS nao executar.
+- **NAO usar `<canvas>` nem Chart.js** — nem via CDN, nem inline
+- Transcricao completa vai **renderizada direto no HTML**, nao dentro de uma string JS
+- Abrir no navegador SEM dependencias locais e tambem no iOS Files/Quick Look
 - Dados **derivados do conteudo real** — nunca inventar numeros
 - Se uma secao nao tiver dados (ex: sem riscos identificados), **omitir completamente** ou marcar "Nenhum identificado"
 - Manter consistencia visual — nao alterar CSS variables, cores ou espaçamentos
@@ -890,7 +948,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
 - Word cloud com 15-25 palavras significativas, filtrar stopwords PT-BR (e, ou, que, de, para, em, com, por, a, o, um, uma, os, as, na, no, da, do, etc.)
 - Timeline usar classes `positive/neutral/concern/constructive` conforme tom
 - Insight cards usar `decisao/finding/problema/acao` conforme tipo
-- Transcricao na box inclui timestamps `[MM:SS]` antes de cada fala para facilitar busca temporal
+- Transcricao inclui timestamps `[MM:SS]` antes de cada fala para facilitar leitura temporal
 - Incluir `<h3>` com titulo em UPPERCASE em todos os cards de grafico/conteudo
 
 ---

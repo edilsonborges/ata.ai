@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<!--
+  Template: retrospectiva-warm
+  Quando usar: retrospectivas de sprint, post-mortems colaborativos, 1-on-1 em grupo,
+                team healthchecks, reunioes com peso emocional / alinhamento de time.
+  Identidade: indigo primario + acentos quentes (coral, ambar, teal),
+               cards arredondados, donuts e mood gauges proeminentes,
+               categorias start/stop/continue, mais cor, mais ar.
+  Dados abaixo sao AMOSTRA. Agente deve substituir por conteudo real.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Retrospectiva Sprint 12 - Time Plataforma</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      color-scheme: light;
+      --bg: #fef7f0;
+      --bg-alt: #fefbf5;
+      --surface: #ffffff;
+      --text: #1c1917;
+      --text-muted: #78716c;
+      --text-dim: #a8a29e;
+      --primary: #4f46e5;
+      --primary-dark: #312e81;
+      --primary-light: #eef2ff;
+      --coral: #fb923c;
+      --coral-bg: #fff7ed;
+      --amber: #fbbf24;
+      --amber-bg: #fef3c7;
+      --teal: #14b8a6;
+      --teal-bg: #ccfbf1;
+      --rose: #fb7185;
+      --rose-bg: #ffe4e6;
+      --violet: #8b5cf6;
+      --violet-bg: #f5f3ff;
+      --decisao: #16a34a;
+      --finding: #d97706;
+      --problema: #dc2626;
+      --info: #2563eb;
+      --border: #f5e6d3;
+      --border-soft: #fde9d4;
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+    }
+    .header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 45%, #ec4899 100%);
+      color: #fff;
+      padding: 3.5rem 1.5rem 4.5rem;
+      border-radius: 0 0 32px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 146, 60, 0.35), transparent 70%);
+    }
+    .header::after {
+      content: "";
+      position: absolute;
+      bottom: -80px; left: 10%;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.25), transparent 70%);
+    }
+    .header .inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+    }
+    .header h1 { font-size: 2.1rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+    .header .subtitle { opacity: 0.9; font-size: 1rem; }
+    main { max-width: 1100px; margin: -3rem auto 3rem; padding: 0 1.5rem; position: relative; z-index: 2; }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 2rem;
+    }
+    .meta-card {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 1.15rem 1.25rem;
+      box-shadow: 0 4px 16px rgba(120, 113, 108, 0.08);
+      border-top: 4px solid var(--primary);
+    }
+    .meta-card.coral { border-top-color: var(--coral); }
+    .meta-card.amber { border-top-color: var(--amber); }
+    .meta-card.teal { border-top-color: var(--teal); }
+    .meta-card .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .meta-card .value { font-size: 1.6rem; font-weight: 700; color: var(--text); }
+    .meta-card .sub { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.1rem; }
+    h2.section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.25rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    h2.section-title::before {
+      content: "";
+      width: 6px; height: 22px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, var(--primary), var(--coral));
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(120, 113, 108, 0.07);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 720px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.6rem; }
+      .card { padding: 1.25rem; }
+    }
+    .mood-gauge {
+      position: relative;
+      width: 240px;
+      height: 140px;
+      margin: 0 auto 1rem;
+      overflow: hidden;
+    }
+    .mood-gauge .arc {
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: conic-gradient(from 270deg, var(--teal) 0 30%, var(--decisao) 30% 55%, var(--amber) 55% 75%, var(--coral) 75% 90%, var(--problema) 90% 100%);
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .mood-gauge .inner-circle {
+      position: absolute;
+      inset: 28px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+    .mood-gauge .needle {
+      position: absolute;
+      bottom: 0; left: 50%;
+      width: 4px; height: 115px;
+      background: var(--text);
+      border-radius: 2px;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(32deg);
+    }
+    .mood-gauge .needle::after {
+      content: "";
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      width: 14px; height: 14px;
+      background: var(--text);
+      border-radius: 50%;
+    }
+    .mood-gauge-label {
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--decisao);
+    }
+    .mood-gauge-sub {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .donut-mood {
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      background: conic-gradient(var(--decisao) 0 52%, var(--teal) 52% 72%, var(--amber) 72% 88%, var(--coral) 88% 96%, var(--problema) 96% 100%);
+    }
+    .donut-mood::after {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+    .donut-mood .center {
+      position: absolute;
+      inset: 0;
+      display: grid; place-items: center;
+      z-index: 1;
+      text-align: center;
+    }
+    .donut-mood .center .big { font-size: 1.7rem; font-weight: 800; color: var(--text); }
+    .donut-mood .center .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .mood-legend { display: flex; flex-direction: column; gap: 0.55rem; }
+    .mood-legend .row { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; }
+    .mood-legend .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .mood-legend .label { flex: 1; color: var(--text-muted); }
+    .mood-legend .pct { font-weight: 700; }
+    .ssc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 720px) { .ssc-grid { grid-template-columns: 1fr; } }
+    .ssc-col {
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      min-height: 280px;
+    }
+    .ssc-col.start { background: var(--teal-bg); border: 1px solid var(--teal); }
+    .ssc-col.stop { background: var(--rose-bg); border: 1px solid var(--rose); }
+    .ssc-col.continue { background: var(--decisao); border: 1px solid var(--decisao); color: #fff; }
+    .ssc-col.continue .title, .ssc-col.continue .item { color: #fff; }
+    .ssc-col .title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .ssc-col.start .title { color: #115e59; }
+    .ssc-col.stop .title { color: #9f1239; }
+    .ssc-col .item {
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 10px;
+      padding: 0.7rem 0.85rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.9rem;
+    }
+    .ssc-col.continue .item { background: rgba(255, 255, 255, 0.2); }
+    .participants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.75rem;
+    }
+    .participant {
+      background: var(--bg-alt);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border-soft);
+    }
+    .participant .avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 0.6rem;
+      display: grid; place-items: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .participant .avatar.teal { background: var(--teal); }
+    .participant .avatar.coral { background: var(--coral); }
+    .participant .avatar.amber { background: var(--amber); }
+    .participant .avatar.violet { background: var(--violet); }
+    .participant .avatar.rose { background: var(--rose); }
+    .participant .name { font-weight: 700; font-size: 0.9rem; }
+    .participant .mood { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .participant .mood-dots { margin-top: 0.5rem; display: flex; gap: 3px; justify-content: center; }
+    .participant .mood-dots span {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--border);
+    }
+    .participant .mood-dots span.on { background: var(--coral); }
+    .topic-pill {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem 1rem;
+      padding: 1rem;
+      background: var(--bg-alt);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.6rem;
+      border-left: 4px solid var(--primary);
+    }
+    .topic-pill.coral { border-left-color: var(--coral); }
+    .topic-pill.teal { border-left-color: var(--teal); }
+    .topic-pill.amber { border-left-color: var(--amber); }
+    .topic-pill .title { font-weight: 600; font-size: 0.95rem; }
+    .topic-pill .pct { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .topic-pill .bar {
+      grid-column: 1 / -1;
+      height: 6px; background: var(--border-soft); border-radius: 3px; overflow: hidden;
+    }
+    .topic-pill .bar > span {
+      display: block; height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--coral));
+    }
+    .topic-pill .summary {
+      grid-column: 1 / -1;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0.2rem;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+    .tag-sistema { background: #dbeafe; color: #1d4ed8; }
+    .tag-orgao { background: var(--rose-bg); color: #9f1239; }
+    .tag-tech { background: var(--teal-bg); color: #115e59; }
+    .tag-ferramenta { background: var(--amber-bg); color: #92400e; }
+    .tag-pessoa { background: var(--coral-bg); color: #9a3412; }
+    .timeline-story { position: relative; padding-left: 2rem; }
+    .timeline-story::before {
+      content: "";
+      position: absolute;
+      left: 8px; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--teal), var(--coral), var(--rose));
+      border-radius: 2px;
+    }
+    .timeline-story .item { position: relative; padding: 0 0 1.5rem 1.5rem; }
+    .timeline-story .item::before {
+      content: "";
+      position: absolute;
+      left: -2.35rem;
+      top: 0.2rem;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 3px solid var(--text-muted);
+    }
+    .timeline-story .item.positive::before { border-color: var(--decisao); background: var(--decisao); }
+    .timeline-story .item.constructive::before { border-color: var(--violet); background: var(--violet); }
+    .timeline-story .item.concern::before { border-color: var(--coral); background: var(--coral); }
+    .timeline-story .time { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+    .timeline-story .text { font-size: 0.95rem; margin-top: 0.2rem; }
+    .insight-card {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 1.15rem 1.3rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 0.75rem;
+    }
+    .insight-card.decisao { border-left-color: var(--decisao); background: #f0fdf4; }
+    .insight-card.finding { border-left-color: var(--amber); background: var(--amber-bg); }
+    .insight-card.problema { border-left-color: var(--rose); background: var(--rose-bg); }
+    .insight-card.acao { border-left-color: var(--teal); background: var(--teal-bg); }
+    .insight-card .kind {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.4rem;
+    }
+    .insight-card .body { font-size: 0.92rem; }
+    .insight-card .quote {
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-left: 2px solid rgba(0,0,0,0.12);
+      padding-left: 0.75rem;
+    }
+    .actions-table { width: 100%; border-collapse: separate; border-spacing: 0 0.4rem; }
+    .actions-table td {
+      background: var(--bg-alt);
+      padding: 0.85rem 0.85rem;
+      font-size: 0.9rem;
+      border: 1px solid var(--border-soft);
+      border-right: none;
+      border-left: none;
+    }
+    .actions-table td:first-child { border-left: 1px solid var(--border-soft); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+    .actions-table td:last-child { border-right: 1px solid var(--border-soft); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .actions-table th {
+      text-align: left;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+    .owner-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .owner-chip .ca {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--coral);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .prio {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .prio-alta { background: var(--rose-bg); color: #9f1239; }
+    .prio-media { background: var(--amber-bg); color: #92400e; }
+    .prio-baixa { background: var(--teal-bg); color: #115e59; }
+    .search-input {
+      width: 100%;
+      padding: 0.85rem 1.15rem;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      background: var(--bg-alt);
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .transcript {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      background: var(--bg-alt);
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-sm);
+      max-height: 500px;
+      overflow-y: auto;
+      line-height: 1.75;
+    }
+    .transcript .line { padding: 0.15rem 0; }
+    .transcript .time { color: var(--coral); margin-right: 0.55rem; font-weight: 600; }
+    .transcript mark { background: var(--amber); padding: 0 2px; border-radius: 2px; }
+    .footer {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 2rem 0 1rem;
+    }
+    @media print {
+      .header { break-inside: avoid; }
+      .card, .ssc-col { break-inside: avoid; }
+      .search-input { display: none; }
+      .transcript { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="inner">
+      <span class="badge">Retrospectiva de Time</span>
+      <h1>Retrospectiva Sprint 12 - Time Plataforma</h1>
+      <div class="subtitle">Sexta-feira, 10/04/2026 - 1h 05min - 7 participantes</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="meta-grid">
+      <div class="meta-card">
+        <div class="label">Humor medio</div>
+        <div class="value">7,4<span style="font-size: 0.9rem; color: var(--text-muted);">/10</span></div>
+        <div class="sub">+0,8 vs sprint 11</div>
+      </div>
+      <div class="meta-card coral">
+        <div class="label">Energia</div>
+        <div class="value">Alta</div>
+        <div class="sub">picos na celebracao</div>
+      </div>
+      <div class="meta-card amber">
+        <div class="label">Tensoes</div>
+        <div class="value">2</div>
+        <div class="sub">resolvidas ao vivo</div>
+      </div>
+      <div class="meta-card teal">
+        <div class="label">Commitments</div>
+        <div class="value">8</div>
+        <div class="sub">para sprint 13</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Sentimento e Energia</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="mood-gauge">
+          <div class="arc"></div>
+          <div class="inner-circle"></div>
+          <div class="needle"></div>
+        </div>
+        <div class="mood-gauge-label">Construtivo</div>
+        <div class="mood-gauge-sub">com momentos de celebracao genuina</div>
+      </div>
+      <div class="card">
+        <div style="display: flex; gap: 1.25rem; align-items: center;">
+          <div class="donut-mood">
+            <div class="center">
+              <div class="big">68%</div>
+              <div class="lbl">Positivo</div>
+            </div>
+          </div>
+          <div class="mood-legend" style="flex: 1;">
+            <div class="row"><span class="dot" style="background: var(--decisao)"></span><span class="label">Feliz / animado</span><span class="pct">52%</span></div>
+            <div class="row"><span class="dot" style="background: var(--teal)"></span><span class="label">Motivado</span><span class="pct">20%</span></div>
+            <div class="row"><span class="dot" style="background: var(--amber)"></span><span class="label">Neutro</span><span class="pct">16%</span></div>
+            <div class="row"><span class="dot" style="background: var(--coral)"></span><span class="label">Cansado</span><span class="pct">8%</span></div>
+            <div class="row"><span class="dot" style="background: var(--problema)"></span><span class="label">Frustrado</span><span class="pct">4%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Start / Stop / Continue</h2>
+    <div class="card">
+      <div class="ssc-grid">
+        <div class="ssc-col start">
+          <div class="title">START</div>
+          <div class="item">Pair programming nos tickets complexos</div>
+          <div class="item">Retros mais curtas e focadas</div>
+          <div class="item">Review assincrono para PRs pequenas</div>
+        </div>
+        <div class="ssc-col stop">
+          <div class="title">STOP</div>
+          <div class="item">Commitments de sprint inflacionados</div>
+          <div class="item">Chamadas improvisadas sem agenda</div>
+          <div class="item">Merge as sextas-feiras 17h</div>
+        </div>
+        <div class="ssc-col continue">
+          <div class="title">CONTINUE</div>
+          <div class="item">Daily curto de 10 minutos</div>
+          <div class="item">Demos semanais para stakeholders</div>
+          <div class="item">Celebrar entregas no canal</div>
+          <div class="item">Shadow de novos devs por 2 semanas</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Participantes</h2>
+    <div class="card">
+      <div class="participants-grid">
+        <div class="participant"><div class="avatar teal">MC</div><div class="name">Marcos C.</div><div class="mood">Animado</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></div>
+        <div class="participant"><div class="avatar coral">SA</div><div class="name">Sofia A.</div><div class="mood">Confiante</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></div>
+        <div class="participant"><div class="avatar amber">RV</div><div class="name">Rodrigo V.</div><div class="mood">Cansado</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div></div>
+        <div class="participant"><div class="avatar violet">LT</div><div class="name">Leticia T.</div><div class="mood">Motivada</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></div>
+        <div class="participant"><div class="avatar rose">FB</div><div class="name">Felipe B.</div><div class="mood">Focado</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></div>
+        <div class="participant"><div class="avatar teal">CN</div><div class="name">Camila N.</div><div class="mood">Celebrando</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div></div>
+        <div class="participant"><div class="avatar coral">JP</div><div class="name">Joana P.</div><div class="mood">Reflexiva</div><div class="mood-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Topicos da Retrospectiva</h2>
+    <div class="card">
+      <div class="topic-pill teal">
+        <div class="title">Lancamento do onboarding novo</div>
+        <div class="pct">26%</div>
+        <div class="summary">Entrega celebrada; feedbacks positivos dos primeiros usuarios.</div>
+        <div class="bar"><span style="width: 85%"></span></div>
+      </div>
+      <div class="topic-pill coral">
+        <div class="title">Overcommitment na sprint</div>
+        <div class="pct">22%</div>
+        <div class="summary">Time concordou que pegou mais stories do que capacidade real.</div>
+        <div class="bar"><span style="width: 71%"></span></div>
+      </div>
+      <div class="topic-pill amber">
+        <div class="title">Qualidade dos tickets recebidos</div>
+        <div class="pct">18%</div>
+        <div class="summary">Tickets sem criterios de aceite claros geraram retrabalho.</div>
+        <div class="bar"><span style="width: 58%"></span></div>
+      </div>
+      <div class="topic-pill">
+        <div class="title">Celebracao de entregas</div>
+        <div class="pct">15%</div>
+        <div class="summary">Time quer manter o habito e estende-lo para sprints dificeis.</div>
+        <div class="bar"><span style="width: 48%"></span></div>
+      </div>
+      <div class="topic-pill">
+        <div class="title">Onboarding de devs novos</div>
+        <div class="pct">12%</div>
+        <div class="summary">Shadow de 2 semanas funcionou bem para Sofia e Felipe.</div>
+        <div class="bar"><span style="width: 38%"></span></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Entidades Mencionadas</h2>
+    <div class="card">
+      <div style="margin-bottom: 0.75rem;">
+        <div style="font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem;">Sistemas</div>
+        <span class="tag tag-sistema">onboarding-v2</span>
+        <span class="tag tag-sistema">plataforma-core</span>
+      </div>
+      <div style="margin-bottom: 0.75rem;">
+        <div style="font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem;">Ferramentas</div>
+        <span class="tag tag-ferramenta">Miro</span>
+        <span class="tag tag-ferramenta">Linear</span>
+        <span class="tag tag-ferramenta">Slack</span>
+      </div>
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem;">Pessoas citadas</div>
+        <span class="tag tag-pessoa">Equipe Produto</span>
+        <span class="tag tag-pessoa">QA</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Timeline da Retro</h2>
+    <div class="card">
+      <div class="timeline-story">
+        <div class="item positive">
+          <div class="time">00:00 - 07:30</div>
+          <div class="text">Check-in emocional. Camila abre celebrando o onboarding-v2.</div>
+        </div>
+        <div class="item positive">
+          <div class="time">07:30 - 18:15</div>
+          <div class="text">Time compartilha momentos de orgulho da sprint. Feedback de usuarios lido em voz alta.</div>
+        </div>
+        <div class="item concern">
+          <div class="time">18:15 - 32:40</div>
+          <div class="text">Rodrigo levanta o tema do overcommitment. Conversa franca sobre capacidade.</div>
+        </div>
+        <div class="item constructive">
+          <div class="time">32:40 - 46:10</div>
+          <div class="text">Brainstorm colaborativo sobre qualidade dos tickets. Criterios de aceite virarao padrao.</div>
+        </div>
+        <div class="item positive">
+          <div class="time">46:10 - 58:30</div>
+          <div class="text">Start/Stop/Continue. Consenso rapido, sem debates polarizados.</div>
+        </div>
+        <div class="item positive">
+          <div class="time">58:30 - 1:05:00</div>
+          <div class="text">Encerramento com agradecimentos mutuos. Sofia convida todos para um cafe apos.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Insights e Decisoes</h2>
+    <div class="grid-2">
+      <div class="insight-card decisao">
+        <span class="kind" style="color: #15803d;">Decisao</span>
+        <div class="body">Adotar pair programming obrigatorio em stories de complexidade 5+.</div>
+      </div>
+      <div class="insight-card decisao">
+        <span class="kind" style="color: #15803d;">Decisao</span>
+        <div class="body">Reduzir commitment de sprint em 20% nas proximas 2 sprints para recalibrar velocidade.</div>
+      </div>
+      <div class="insight-card finding">
+        <span class="kind" style="color: #92400e;">Finding</span>
+        <div class="body">72% dos tickets que geraram retrabalho nao tinham criterio de aceite claro.</div>
+        <div class="quote">"A gente estima no escuro quando o ticket ta vago, e ai a sprint explode" - Rodrigo [24:18]</div>
+      </div>
+      <div class="insight-card problema">
+        <span class="kind" style="color: #9f1239;">Problema</span>
+        <div class="body">Rodrigo reportou sinais de cansaco - alinhar carga nos proximos 1on1.</div>
+      </div>
+      <div class="insight-card acao">
+        <span class="kind" style="color: #115e59;">Acao</span>
+        <div class="body">Criar template de ticket com criterios de aceite obrigatorios - Leticia e Felipe.</div>
+      </div>
+      <div class="insight-card acao">
+        <span class="kind" style="color: #115e59;">Acao</span>
+        <div class="body">Marcos organiza almoco de time para celebrar onboarding-v2.</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Commitments da Proxima Sprint</h2>
+    <div class="card">
+      <table class="actions-table">
+        <thead><tr><th>Commitment</th><th>Owner</th><th>Prazo</th><th>Prio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Template de ticket com criterios de aceite</td>
+            <td><span class="owner-chip"><span class="ca">LT</span>Leticia</span></td>
+            <td>15/04</td>
+            <td><span class="prio prio-alta">Alta</span></td>
+          </tr>
+          <tr>
+            <td>Implementar pair programming em stories 5+</td>
+            <td><span class="owner-chip"><span class="ca" style="background: var(--violet)">MC</span>Marcos</span></td>
+            <td>Continuo</td>
+            <td><span class="prio prio-alta">Alta</span></td>
+          </tr>
+          <tr>
+            <td>Recalibrar capacidade da sprint 13 (-20%)</td>
+            <td><span class="owner-chip"><span class="ca" style="background: var(--teal)">CN</span>Camila</span></td>
+            <td>12/04</td>
+            <td><span class="prio prio-alta">Alta</span></td>
+          </tr>
+          <tr>
+            <td>Almoco de celebracao onboarding-v2</td>
+            <td><span class="owner-chip"><span class="ca">MC</span>Marcos</span></td>
+            <td>16/04</td>
+            <td><span class="prio prio-baixa">Baixa</span></td>
+          </tr>
+          <tr>
+            <td>1on1 de alinhamento de carga</td>
+            <td><span class="owner-chip"><span class="ca" style="background: var(--amber)">CN</span>Camila</span></td>
+            <td>14/04</td>
+            <td><span class="prio prio-media">Media</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Transcricao</h2>
+    <div class="card">
+      <input type="text" class="search-input" id="searchInput" placeholder="Procurar trechos da conversa...">
+      <div class="transcript" id="transcript">
+        <div class="line"><span class="time">[00:42]</span>Camila: pessoal, obrigada por virem. Vamos comecar com um check-in rapido: uma palavra que descreve sua sprint.</div>
+        <div class="line"><span class="time">[07:55]</span>Sofia: foi a primeira sprint que senti que a gente entregou algo que o usuario realmente queria.</div>
+        <div class="line"><span class="time">[18:20]</span>Rodrigo: quero falar do overcommitment. A gente puxou 18 stories e entregou 11. Isso nao e saudavel.</div>
+        <div class="line"><span class="time">[24:18]</span>Rodrigo: a gente estima no escuro quando o ticket ta vago, e ai a sprint explode.</div>
+        <div class="line"><span class="time">[32:50]</span>Leticia: bora criar um template de ticket com criterios de aceite? Eu puxo isso.</div>
+        <div class="line"><span class="time">[46:30]</span>Marcos: achei muito legal o shadow do Felipe com a Joana. Vamos manter como default.</div>
+        <div class="line"><span class="time">[1:04:10]</span>Camila: fechou. Valeu demais pela sinceridade de todo mundo hoje.</div>
+      </div>
+    </div>
+
+    <div class="footer">Gerado via /analisar-reuniao - template retrospectiva-warm</div>
+  </main>
+  <script>
+    (function(){
+      var input = document.getElementById('searchInput');
+      var transcript = document.getElementById('transcript');
+      if (!input || !transcript) return;
+      var lines = Array.from(transcript.querySelectorAll('.line'));
+      var raw = lines.map(function(l){ return { el: l, text: l.textContent.toLowerCase() }; });
+      input.addEventListener('input', function(){
+        var q = input.value.toLowerCase().trim();
+        raw.forEach(function(r){
+          r.el.style.display = (!q || r.text.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

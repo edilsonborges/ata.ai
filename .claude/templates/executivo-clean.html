@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!--
+  Template: executivo-clean
+  Quando usar: reunioes de decisao, alinhamento executivo, comites de diretoria.
+                Foco em KPIs, acoes, decisoes e riscos. Participantes seniores.
+  Identidade: indigo corporativo, hero KPI em destaque, tabela de acoes proeminente.
+  Dados abaixo sao AMOSTRA. Agente deve substituir por conteudo real da transcricao.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Lancamento Q2 - Expansao Nordeste</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      color-scheme: light;
+      --bg: #f5f6fa;
+      --surface: #ffffff;
+      --surface-alt: #fafbff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-dark: #312e81;
+      --primary-light: #eef2ff;
+      --purple: #7c3aed;
+      --decisao: #16a34a;
+      --decisao-bg: #f0fdf4;
+      --finding: #d97706;
+      --finding-bg: #fffbeb;
+      --problema: #dc2626;
+      --problema-bg: #fef2f2;
+      --info: #2563eb;
+      --info-bg: #eff6ff;
+      --construtivo: #7c3aed;
+      --construtivo-bg: #faf5ff;
+      --border: #e2e8f0;
+      --radius: 14px;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.55;
+      -webkit-text-size-adjust: 100%;
+    }
+    .header {
+      background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+    }
+    .header .inner { max-width: 1100px; margin: 0 auto; }
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .header h1 { font-size: 1.9rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.5rem; }
+    .header .subtitle { opacity: 0.85; font-size: 0.95rem; }
+    main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: -3rem;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+    .hero .cell {
+      padding: 1.5rem 1.25rem;
+      border-right: 1px solid var(--border);
+    }
+    .hero .cell:last-child { border-right: none; }
+    .hero .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .hero .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .hero .unit { font-size: 0.85rem; color: var(--text-muted); margin-left: 0.2rem; }
+    h2.section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 640px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .hero .cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .header { padding: 2rem 1.25rem; }
+      .header h1 { font-size: 1.45rem; }
+    }
+    .donut {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      position: relative;
+      margin: 0.5rem auto;
+      background: conic-gradient(var(--decisao) 0 72%, var(--finding) 72% 88%, var(--problema) 88% 100%);
+    }
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+    .donut .center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      text-align: center;
+    }
+    .donut .center .big { font-size: 1.6rem; font-weight: 700; color: var(--decisao); }
+    .donut .center .lbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; justify-content: center; font-size: 0.85rem; }
+    .legend .item { display: flex; align-items: center; gap: 0.4rem; }
+    .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .stat-stack { display: flex; flex-direction: column; gap: 1rem; justify-content: center; height: 100%; }
+    .stat-stack .row { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 0.5rem; }
+    .stat-stack .row:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-stack .num { font-size: 1.4rem; font-weight: 700; }
+    .stat-stack .lbl { font-size: 0.85rem; color: var(--text-muted); }
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .person:last-child { border-bottom: none; }
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      display: grid; place-items: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .person .name { font-weight: 600; font-size: 0.95rem; }
+    .person .role { font-size: 0.8rem; color: var(--text-muted); }
+    .person .mini-bar {
+      margin-left: auto;
+      width: 120px;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .person .mini-bar > span { display: block; height: 100%; background: var(--primary); }
+    .topic {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.4rem 1rem;
+      align-items: baseline;
+      margin-bottom: 1rem;
+    }
+    .topic .title { font-weight: 600; font-size: 0.95rem; }
+    .topic .pct { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 0.85rem; }
+    .topic .summary { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.88rem; }
+    .topic .bar {
+      grid-column: 1 / -1;
+      height: 8px;
+      background: #eef2ff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .topic .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple)); }
+    .tags-group { margin-bottom: 1rem; }
+    .tags-group .category {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.07em;
+      margin-bottom: 0.4rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin: 0.15rem;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+    .tag-sistema { background: #dbeafe; color: #1d4ed8; }
+    .tag-orgao { background: #fae8ff; color: #86198f; }
+    .tag-tech { background: #dcfce7; color: #166534; }
+    .tag-ferramenta { background: #fef3c7; color: #92400e; }
+    .tag-pessoa { background: #fee2e2; color: #991b1b; }
+    .timeline { padding-left: 1rem; border-left: 2px solid var(--border); }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 1.25rem 1rem;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.4rem;
+      top: 0.35rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      border: 2px solid var(--surface);
+      box-shadow: 0 0 0 2px var(--border);
+    }
+    .timeline-item.positive::before { background: var(--decisao); box-shadow: 0 0 0 2px var(--decisao); }
+    .timeline-item.concern::before { background: var(--problema); box-shadow: 0 0 0 2px var(--problema); }
+    .timeline-item.constructive::before { background: var(--construtivo); box-shadow: 0 0 0 2px var(--construtivo); }
+    .timeline-item .time { font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--text-muted); }
+    .timeline-item .text { font-size: 0.92rem; margin-top: 0.15rem; }
+    .insight-card {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 1rem 1.15rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 0.75rem;
+    }
+    .insight-card.decisao { border-left-color: var(--decisao); background: var(--decisao-bg); }
+    .insight-card.finding { border-left-color: var(--finding); background: var(--finding-bg); }
+    .insight-card.problema { border-left-color: var(--problema); background: var(--problema-bg); }
+    .insight-card.acao { border-left-color: var(--info); background: var(--info-bg); }
+    .insight-card .kind {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      color: var(--text-muted);
+    }
+    .insight-card .kind.decisao { color: var(--decisao); }
+    .insight-card .kind.finding { color: var(--finding); }
+    .insight-card .kind.problema { color: var(--problema); }
+    .insight-card .kind.acao { color: var(--info); }
+    .insight-card .body { font-size: 0.9rem; }
+    .insight-card .quote { margin-top: 0.5rem; font-style: italic; color: var(--text-muted); font-size: 0.82rem; }
+    .risk-grid {
+      display: grid;
+      grid-template-columns: auto repeat(3, 1fr);
+      grid-template-rows: auto repeat(3, 90px);
+      gap: 4px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .risk-grid .axis { font-size: 0.75rem; color: var(--text-muted); display: grid; place-items: center; font-weight: 500; }
+    .risk-grid .cell {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      position: relative;
+      padding: 0.4rem;
+    }
+    .risk-grid .cell.low { background: #f0fdf4; }
+    .risk-grid .cell.med { background: #fffbeb; }
+    .risk-grid .cell.high { background: #fef2f2; }
+    .risk-dot {
+      position: absolute;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.72rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .actions-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .actions-table th, .actions-table td {
+      text-align: left;
+      padding: 0.75rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .actions-table th {
+      background: var(--surface-alt);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+    }
+    .prio {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .prio-alta { background: var(--problema-bg); color: var(--problema); }
+    .prio-media { background: var(--finding-bg); color: var(--finding); }
+    .prio-baixa { background: var(--decisao-bg); color: var(--decisao); }
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: var(--surface);
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .transcript {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      background: var(--surface-alt);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      max-height: 520px;
+      overflow-y: auto;
+      line-height: 1.7;
+    }
+    .transcript .line { padding: 0.15rem 0; }
+    .transcript .time { color: var(--text-muted); margin-right: 0.5rem; font-size: 0.78rem; }
+    .transcript mark { background: #fef08a; padding: 0 2px; border-radius: 2px; }
+    .footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 2rem 0 1rem;
+    }
+    @media print {
+      .header { break-inside: avoid; }
+      .card { break-inside: avoid; page-break-inside: avoid; }
+      .search-input { display: none; }
+      .transcript { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="inner">
+      <span class="badge">Reuniao Executiva</span>
+      <h1>Lancamento Q2 - Expansao Nordeste</h1>
+      <div class="subtitle">Segunda, 07 de abril de 2026 - 52 minutos - 6 participantes</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="hero">
+      <div class="cell">
+        <div class="label">Decisoes</div>
+        <div class="value">4</div>
+      </div>
+      <div class="cell">
+        <div class="label">Acoes</div>
+        <div class="value">11</div>
+      </div>
+      <div class="cell">
+        <div class="label">Risco geral</div>
+        <div class="value">Medio</div>
+      </div>
+      <div class="cell">
+        <div class="label">Consenso</div>
+        <div class="value">83<span class="unit">%</span></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Sentimento e Engajamento</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="donut">
+          <div class="center">
+            <div class="big">72%</div>
+            <div class="lbl">Construtivo</div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="item"><span class="dot" style="background: var(--decisao)"></span>Positivo 72%</div>
+          <div class="item"><span class="dot" style="background: var(--finding)"></span>Neutro 16%</div>
+          <div class="item"><span class="dot" style="background: var(--problema)"></span>Atrito 12%</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stat-stack">
+          <div class="row"><span class="lbl">Momentos de decisao</span><span class="num">4</span></div>
+          <div class="row"><span class="lbl">Duvidas levantadas</span><span class="num">7</span></div>
+          <div class="row"><span class="lbl">Pontos de atrito</span><span class="num">2</span></div>
+          <div class="row"><span class="lbl">Palavra mais repetida</span><span class="num" style="font-size:1.05rem">"prazo"</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Participantes</h2>
+    <div class="card">
+      <div class="person">
+        <div class="avatar">MR</div>
+        <div>
+          <div class="name">Marina Ramos</div>
+          <div class="role">Diretora de Operacoes - facilitadora</div>
+        </div>
+        <div class="mini-bar"><span style="width: 34%"></span></div>
+      </div>
+      <div class="person">
+        <div class="avatar">JC</div>
+        <div>
+          <div class="name">Joao Carvalho</div>
+          <div class="role">Head de Vendas NE</div>
+        </div>
+        <div class="mini-bar"><span style="width: 27%"></span></div>
+      </div>
+      <div class="person">
+        <div class="avatar">BS</div>
+        <div>
+          <div class="name">Bianca Silva</div>
+          <div class="role">Product Manager</div>
+        </div>
+        <div class="mini-bar"><span style="width: 19%"></span></div>
+      </div>
+      <div class="person">
+        <div class="avatar">LA</div>
+        <div>
+          <div class="name">Lucas Almeida</div>
+          <div class="role">Tech Lead</div>
+        </div>
+        <div class="mini-bar"><span style="width: 12%"></span></div>
+      </div>
+      <div class="person">
+        <div class="avatar">+2</div>
+        <div>
+          <div class="name">Outros participantes</div>
+          <div class="role">Financeiro, Juridico - baixa participacao</div>
+        </div>
+        <div class="mini-bar"><span style="width: 8%"></span></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Topicos Discutidos</h2>
+    <div class="card">
+      <div class="topic">
+        <div class="title">Cronograma de rollout Fortaleza / Recife</div>
+        <div class="pct">32%</div>
+        <div class="summary">Discutidos prazos de infra, parceiros locais e janela de comunicacao.</div>
+        <div class="bar"><span style="width: 88%"></span></div>
+      </div>
+      <div class="topic">
+        <div class="title">Budget de mkt e contratacao</div>
+        <div class="pct">24%</div>
+        <div class="summary">Aprovado aporte adicional de R$ 320k condicionado a metas de Q1.</div>
+        <div class="bar"><span style="width: 66%"></span></div>
+      </div>
+      <div class="topic">
+        <div class="title">Integracao com ERPs locais</div>
+        <div class="pct">19%</div>
+        <div class="summary">Bianca trara requisitos consolidados ate 14/04.</div>
+        <div class="bar"><span style="width: 52%"></span></div>
+      </div>
+      <div class="topic">
+        <div class="title">Canal de atendimento pt-BR nordeste</div>
+        <div class="pct">15%</div>
+        <div class="summary">Equipe dedicada ou terceiro - decisao postergada.</div>
+        <div class="bar"><span style="width: 41%"></span></div>
+      </div>
+      <div class="topic">
+        <div class="title">Riscos regulatorios</div>
+        <div class="pct">10%</div>
+        <div class="summary">Juridico validou ate 31/03; monitoramento trimestral.</div>
+        <div class="bar"><span style="width: 28%"></span></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Entidades Mencionadas</h2>
+    <div class="card">
+      <div class="tags-group">
+        <div class="category">Sistemas</div>
+        <span class="tag tag-sistema">ERP Sankhya</span>
+        <span class="tag tag-sistema">HubSpot</span>
+        <span class="tag tag-sistema">Salesforce</span>
+      </div>
+      <div class="tags-group">
+        <div class="category">Orgaos / empresas</div>
+        <span class="tag tag-orgao">SEFAZ-CE</span>
+        <span class="tag tag-orgao">Parceiro X Logistica</span>
+      </div>
+      <div class="tags-group">
+        <div class="category">Ferramentas</div>
+        <span class="tag tag-ferramenta">Notion</span>
+        <span class="tag tag-ferramenta">Linear</span>
+        <span class="tag tag-ferramenta">Slack</span>
+      </div>
+      <div class="tags-group">
+        <div class="category">Pessoas citadas</div>
+        <span class="tag tag-pessoa">Carlos (CEO parceiro)</span>
+        <span class="tag tag-pessoa">Dra. Fernanda (juridico externo)</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Timeline da Reuniao</h2>
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item positive">
+          <div class="time">00:00 - 04:20</div>
+          <div class="text">Abertura e alinhamento de agenda. Marina estabelece prioridades.</div>
+        </div>
+        <div class="timeline-item constructive">
+          <div class="time">04:20 - 16:50</div>
+          <div class="text">Discussao de cronograma rollout. Joao apresenta estimativa de 45 dias por praca.</div>
+        </div>
+        <div class="timeline-item concern">
+          <div class="time">16:50 - 23:10</div>
+          <div class="text">Ponto de atrito: budget de marketing insuficiente para cobertura dupla.</div>
+        </div>
+        <div class="timeline-item positive">
+          <div class="time">23:10 - 32:45</div>
+          <div class="text">Decisao: aprovar aporte adicional de R$ 320k condicionado a meta Q1.</div>
+        </div>
+        <div class="timeline-item constructive">
+          <div class="time">32:45 - 46:20</div>
+          <div class="text">Alinhamento tecnico com Lucas sobre integracoes ERP. Requisitos ate 14/04.</div>
+        </div>
+        <div class="timeline-item positive">
+          <div class="time">46:20 - 52:00</div>
+          <div class="text">Wrap up, owners nomeados, proxima reuniao marcada para 21/04.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Insights e Decisoes</h2>
+    <div class="grid-2">
+      <div class="insight-card decisao">
+        <div class="kind decisao">Decisao</div>
+        <div class="body">Aprovar aporte adicional de R$ 320k em marketing Nordeste condicionado a atingimento de 85% da meta Q1.</div>
+        <div class="quote">"Se o Q1 bater, a gente desbloqueia o aporte dia 5 de abril" - Marina [24:12]</div>
+      </div>
+      <div class="insight-card decisao">
+        <div class="kind decisao">Decisao</div>
+        <div class="body">Definir Fortaleza como primeira praca do rollout, seguida de Recife com 30 dias de defasagem.</div>
+      </div>
+      <div class="insight-card finding">
+        <div class="kind finding">Finding</div>
+        <div class="body">ERPs locais tem variacao significativa de versao - impacta scope de integracao em 2-3 sprints a mais que previsto.</div>
+      </div>
+      <div class="insight-card problema">
+        <div class="kind problema">Problema</div>
+        <div class="body">Canal de atendimento pt-BR Nordeste ficou sem owner claro - decisao postergada para proxima reuniao.</div>
+      </div>
+      <div class="insight-card acao">
+        <div class="kind acao">Acao</div>
+        <div class="body">Bianca consolida requisitos funcionais de integracao ERP e partilha com time tech ate 14/04.</div>
+      </div>
+      <div class="insight-card acao">
+        <div class="kind acao">Acao</div>
+        <div class="body">Joao valida com parceiro logistico janela de comunicacao regional (semana de 28/04).</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Matriz de Risco</h2>
+    <div class="card">
+      <div class="risk-grid">
+        <div class="axis"></div>
+        <div class="axis">Baixo</div>
+        <div class="axis">Medio</div>
+        <div class="axis">Alto</div>
+        <div class="axis">Alto</div>
+        <div class="cell med"></div>
+        <div class="cell high"></div>
+        <div class="cell high"><span class="risk-dot" style="top: 20%; left: 20%;">Budget mkt</span></div>
+        <div class="axis">Medio</div>
+        <div class="cell low"></div>
+        <div class="cell med"><span class="risk-dot" style="top: 30%; left: 25%;">ERP integracao</span><span class="risk-dot" style="bottom: 20%; right: 15%;">Atendimento</span></div>
+        <div class="cell high"></div>
+        <div class="axis">Baixo</div>
+        <div class="cell low"></div>
+        <div class="cell low"><span class="risk-dot" style="top: 35%; left: 30%;">Juridico</span></div>
+        <div class="cell med"></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Acoes e Proximos Passos</h2>
+    <div class="card">
+      <table class="actions-table">
+        <thead>
+          <tr><th>Acao</th><th>Responsavel</th><th>Prazo</th><th>Prioridade</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Consolidar requisitos ERP</td><td>Bianca</td><td>14/04</td><td><span class="prio prio-alta">Alta</span></td></tr>
+          <tr><td>Validar janela com parceiro logistico</td><td>Joao</td><td>18/04</td><td><span class="prio prio-alta">Alta</span></td></tr>
+          <tr><td>Aporte R$ 320k - aprovar formalmente</td><td>Marina</td><td>05/05</td><td><span class="prio prio-media">Media</span></td></tr>
+          <tr><td>Proposta canal atendimento NE</td><td>Lucas + Bianca</td><td>21/04</td><td><span class="prio prio-media">Media</span></td></tr>
+          <tr><td>Acompanhamento regulatorio trimestral</td><td>Juridico</td><td>30/06</td><td><span class="prio prio-baixa">Baixa</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Transcricao Completa</h2>
+    <div class="card">
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar na transcricao...">
+      <div class="transcript" id="transcript">
+        <div class="line"><span class="time">[00:12]</span>Bom dia pessoal, obrigada por estarem aqui. A ideia de hoje e fechar o cronograma de rollout do Nordeste antes do fim do mes.</div>
+        <div class="line"><span class="time">[00:48]</span>Joao, voce pode abrir a parte de vendas, por favor.</div>
+        <div class="line"><span class="time">[01:05]</span>Claro. A estimativa que a gente tem e de 45 dias por praca, considerando ramp-up do time local.</div>
+        <div class="line"><span class="time">[16:53]</span>Isso nao cabe no budget que a gente tem hoje. Precisaria de pelo menos mais 300k.</div>
+        <div class="line"><span class="time">[24:12]</span>Se o Q1 bater, a gente desbloqueia o aporte dia 5 de abril.</div>
+        <div class="line"><span class="time">[33:01]</span>Lucas, qual a sua leitura de esforco nos ERPs locais?</div>
+        <div class="line"><span class="time">[46:30]</span>Perfeito, acho que fechamos. Marcando pra dia 21, mesmo horario.</div>
+      </div>
+    </div>
+
+    <div class="footer">Gerado via /analisar-reuniao - template executivo-clean</div>
+  </main>
+  <script>
+    (function(){
+      var input = document.getElementById('searchInput');
+      var transcript = document.getElementById('transcript');
+      if (!input || !transcript) return;
+      var lines = Array.from(transcript.querySelectorAll('.line'));
+      var raw = lines.map(function(l){ return { el: l, text: l.textContent.toLowerCase() }; });
+      input.addEventListener('input', function(){
+        var q = input.value.toLowerCase().trim();
+        raw.forEach(function(r){
+          r.el.style.display = (!q || r.text.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

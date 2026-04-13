@@ -35,7 +35,7 @@ Se qualquer um faltar, o comando falha. Não há fallbacks.
 
 A seção 6 de `analisar-reuniao.md` define um padrão visual **que não deve ser alterado sem motivo explícito**:
 
-- **Self-contained**: CSS e JS inline; única dependência externa é `chart.js@4.4.7` via CDN jsdelivr.
+- **Self-contained sem JS para dados**: CSS inline, zero dependências externas (sem CDN, sem Chart.js). **JavaScript nunca é necessário para visualizar dados** — iOS Quick Look, iOS Files Preview e AirDrop preview desativam JS em HTMLs locais. Todos os gráficos devem ser HTML + CSS puros: barras com `width: N%`, donuts com `conic-gradient`, bubbles com `position: absolute`, sparklines com SVG inline estático. JS só existe como progressive enhancement (ex: busca na transcrição) e a página deve continuar legível sem ele. Transcrição vai **renderizada direto no HTML**, nunca em string JS.
 - **Light mode forçado (mobile)**: `<meta name="color-scheme" content="light">` no `<head>` + `color-scheme: light` no `:root` do CSS. Sem isso, iOS Safari e Chrome Android em dark mode do sistema invertem cores automaticamente e o texto fica branco sobre fundo claro (ilegível). Inputs como `.search-input` precisam de `background` e `color` explícitos pelo mesmo motivo.
 - **Paleta fixa**: primário indigo `#4f46e5`, gradient header `linear-gradient(135deg, #312e81, #4f46e5, #7c3aed)`. Cores semânticas: verde decisão, vermelho problema, âmbar finding, azul info, roxo construtivo.
 - **Estrutura de seções na ordem**: Meta cards → Sentimento → Participantes → Tópicos → Entidades → Fluxo → Timeline → Insights/Decisões → Matriz de risco → Ações → Transcrição com busca → Footer.
