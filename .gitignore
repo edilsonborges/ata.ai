@@ -1,31 +1,83 @@
+# ============================================================
+# Sistema operacional
+# ============================================================
 .DS_Store
-analise_*/
+Thumbs.db
 
-# Storage runtime
+# ============================================================
+# Claude Code (runtime e estado local)
+# ============================================================
+.claude/scheduled_tasks.lock
+.claude/state/
+.claude/cache/
+
+# ============================================================
+# Saidas do slash command e arquivos de trabalho local
+# ============================================================
+# Pastas geradas por /analisar-reuniao na raiz do projeto
+analise_*/
+# Arquivos compactados na raiz (ex: zip de uma pasta de analise)
+/*.zip
+/*.tar
+/*.tar.gz
+
+# Midia bruta deixada na raiz para ser processada pelo slash command
+/*.mp4
+/*.mov
+/*.webm
+/*.avi
+/*.mkv
+/*.wav
+/*.mp3
+/*.m4a
+/*.ogg
+/*.flac
+/*.aac
+
+# ============================================================
+# Storage runtime (bind mounts do Docker Compose)
+# ============================================================
 storage/uploads/*
 storage/analyses/*
 !storage/uploads/.gitkeep
 !storage/analyses/.gitkeep
 
-# Python
+# ============================================================
+# Python (backend)
+# ============================================================
 __pycache__/
 *.pyc
+*.pyo
 .venv/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 *.egg-info/
 
-# Node
+# ============================================================
+# Node / Next.js (frontend)
+# ============================================================
 node_modules/
 .next/
 out/
+dist/
 
-# Env
+# ============================================================
+# Variaveis de ambiente (nunca versionar)
+# ============================================================
 .env
 .env.local
 .env.*.local
 
-# Tools
+# ============================================================
+# Tooling e editores
+# ============================================================
 .playwright-mcp/
+.idea/
+.vscode/
+
+# ============================================================
+# Screenshots soltos (exceto dentro de docs/)
+# ============================================================
 *.png
 !docs/**/*.png
